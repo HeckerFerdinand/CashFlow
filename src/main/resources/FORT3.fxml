@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1048.0" prefWidth="1924.0" styleClass="backround-color" stylesheets="@Home1.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FORT3Controller">
+   <children>
+      <BorderPane layoutX="-4.0" layoutY="-2.0" prefHeight="1048.0" prefWidth="1930.0" styleClass="backround-color" stylesheets="@Home1.css">
+         <top>
+            <VBox prefHeight="96.0" prefWidth="1930.0" BorderPane.alignment="CENTER">
+               <children>
+                  <HBox minHeight="-Infinity" prefHeight="60.0" styleClass="top-bar2" stylesheets="@Home1.css">
+                     <children>
+                        <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="58.0" prefWidth="500.0" text="Fortschritt">
+                           <font>
+                              <Font name="Calibri Bold" size="30.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="712.0" right="600.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Button id="klbutton2a" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#handleklbutton2c" styleClass="button-toplane" stylesheets="@Home1.css" text="–" textAlignment="CENTER">
+                           <font>
+                              <Font name="Calibri" size="28.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </Button>
+                        <Button id="clbutton2a" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#handleclbutton2c" styleClass="button-toplane" stylesheets="@Home1.css" text="x" textAlignment="CENTER">
+                           <font>
+                              <Font name="Calibri" size="28.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <Button id="backbutton2a" minHeight="-Infinity" minWidth="117.0" mnemonicParsing="false" onAction="#handlebackbutton2c" prefHeight="50.0" prefWidth="117.0" styleClass="button-back" stylesheets="@Home1.css" text="Zurück">
+                     <font>
+                        <Font size="41.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+                     </VBox.margin>
+                  </Button>
+               </children>
+            </VBox>
+         </top>
+         <center>
+            <VBox prefHeight="888.0" prefWidth="1831.0" BorderPane.alignment="CENTER">
+               <children>
+                  <HBox prefHeight="50.0" prefWidth="200.0">
+                     <children>
+                        <CheckBox fx:id="lohnabrcheckbox2c" mnemonicParsing="false" styleClass="checkbox-lohn" stylesheets="@Home1.css">
+                           <font>
+                              <Font size="25.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="300.0" />
+                           </HBox.margin>
+                        </CheckBox>
+                        <Label text="Lohnabrechnung">
+                           <font>
+                              <Font name="Calibri Bold" size="30.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="25.0" />
+                           </HBox.margin></Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="50.0" prefWidth="200.0">
+                     <children>
+                        <CheckBox fx:id="zeitabrcheckbox2c" mnemonicParsing="false" styleClass="checkbox-zeit" stylesheets="@Home1.css">
+                           <font>
+                              <Font size="25.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="300.0" />
+                           </HBox.margin>
+                        </CheckBox>
+                        <Label text="Zeitabrechnung">
+                           <font>
+                              <Font name="Calibri Bold" size="30.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="25.0" />
+                           </HBox.margin></Label>
+                        <Label text="2025">
+                           <font>
+                              <Font name="Calibri Bold" size="29.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="1212.0" />
+                           </HBox.margin></Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox prefHeight="788.0" prefWidth="1930.0">
+                     <TableView fx:id="tableView" prefHeight="696.0" prefWidth="1728.0">
+                        <columns>
+                        </columns>
+                        <HBox.margin>
+                           <Insets bottom="50.0" left="98.0" right="98.0" top="50.0" />
+                        </HBox.margin>
+                     </TableView>
+                  </HBox>
+               </children>
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
+            </VBox>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>

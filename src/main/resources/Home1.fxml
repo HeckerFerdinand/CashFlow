@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?fxml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1048.0" prefWidth="1924.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Home1Controller">
+   <children>
+      <ImageView fitHeight="1173.0" fitWidth="1942.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@background.jpg" />
+         </image>
+      </ImageView>
+      <BorderPane layoutX="-14.0" prefHeight="760.0" prefWidth="749.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <VBox prefHeight="361.0" prefWidth="1929.0">
+               <children>
+                  <HBox minHeight="-Infinity" prefHeight="60.0">
+                     <children>
+                        <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="500.0">
+                           <font>
+                              <Font name="Calibri Bold" size="30.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="712.0" right="600.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Button id="klbutton1" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#handleklbutton1" styleClass="button-toplane" stylesheets="@Home1.css" text="–" textAlignment="CENTER">
+                           <font>
+                              <Font name="Calibri" size="28.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </Button>
+                        <Button id="clbutton1" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#handleclbutton1" styleClass="button-toplane" stylesheets="@Home1.css" text="x" textAlignment="CENTER">
+                           <font>
+                              <Font name="Calibri" size="28.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="176.0" prefWidth="1929.0" styleClass="headline" stylesheets="@Home1.css">
+                     <children>
+                        <Label prefHeight="169.0" prefWidth="722.0" styleClass="headline" stylesheets="@Home1.css" text="CashFlow" textAlignment="CENTER">
+                           <font>
+                              <Font name="Calibri Bold" size="93.0" />
+                           </font>
+                           <padding>
+                              <Insets left="175.0" />
+                           </padding>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </Label>
+                        <VBox prefHeight="107.0" prefWidth="1471.0">
+                           <children>
+                              <Label prefHeight="32.0" prefWidth="879.0" styleClass="headline-small" stylesheets="@Home1.css" text="powered by Java | postgreSQL | FXML | Advanced PDF Generation Technology" textAlignment="CENTER">
+                                 <font>
+                                    <Font name="Calibri" size="26.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label prefHeight="21.0" prefWidth="406.0" styleClass="headline-small" stylesheets="@Home1.css" text="developed for Hausverwaltung Hecker" textAlignment="CENTER">
+                                 <font>
+                                    <Font name="Calibri" size="26.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets left="470.0" top="50.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#dadada" height="126.0" opacity="0.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" width="1929.0" />
+               </children>
+            </VBox>
+         </top>
+         <bottom>
+            <HBox alignment="TOP_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="59.0" prefWidth="1929.0" styleClass="general-backround" stylesheets="@Home1.css" BorderPane.alignment="TOP_RIGHT">
+               <children>
+                  <Button id="hsbutton1" mnemonicParsing="false" onAction="#handlehsbutton1" prefHeight="81.0" prefWidth="170.0" styleClass="button-bottomlane" stylesheets="@Home1.css" text="Hilfe und Support" underline="true">
+                     <font>
+                        <Font name="Calibri" size="20.0" />
+                     </font>
+                  </Button>
+                  <Button id="nbbutton1" mnemonicParsing="false" onAction="#handlenbbutton1" prefHeight="65.0" prefWidth="209.0" styleClass="button-bottomlane" stylesheets="@Home1.css" text="Nutzungsbedingungen" underline="true">
+                     <font>
+                        <Font name="Calibri" size="20.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="50.0" right="50.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button id="ipbutton1" mnemonicParsing="false" onAction="#handleipbutton1" prefHeight="65.0" prefWidth="117.0" styleClass="button-bottomlane" stylesheets="@Home1.css" text="Impressum" underline="true">
+                     <font>
+                        <Font name="Calibri" size="20.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets right="1200.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Label prefHeight="64.0" prefWidth="119.0" styleClass="version-text" stylesheets="@Home1.css" text="version 0.1">
+                     <font>
+                        <Font name="Calibri" size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+         </bottom>
+         <center>
+            <HBox prefHeight="818.0" prefWidth="1533.0" styleClass="general-backround" stylesheets="@Home1.css" BorderPane.alignment="CENTER">
+               <children>
+                  <Button id="lbbutton1" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlelbbutton1" prefHeight="208.0" prefWidth="600.0" styleClass="button-choose1" stylesheets="@Home1.css" text="Lohnbuchhaltung">
+                     <font>
+                        <Font name="Calibri Bold" size="50.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets bottom="200.0" left="100.0" top="170.0" />
+                     </HBox.margin>
+                     <padding>
+                        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+                     </padding>
+                  </Button>
+                  <Button id="sdbutton1" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlesdvbutton1" prefHeight="208.0" prefWidth="600.0" styleClass="button-choose1" stylesheets="@Home1.css" text="Stammdatenverwaltung">
+                     <font>
+                        <Font name="Calibri Bold" size="50.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets bottom="200.0" left="100.0" top="170.0" />
+                     </HBox.margin>
+                     <padding>
+                        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+                     </padding>
+                  </Button>
+               </children>
+            </HBox>
+         </center>
+         <left>
+            <VBox prefHeight="758.0" prefWidth="456.0" styleClass="general-backround" stylesheets="@Home1.css" BorderPane.alignment="CENTER">
+               <children>
+                  <ImageView fitHeight="390.0" fitWidth="324.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@Logo1-removebg.png" />
+                     </image>
+                     <VBox.margin>
+                        <Insets left="90.0" top="90.0" />
+                     </VBox.margin>
+                  </ImageView>
+               </children>
+            </VBox>
+         </left>
+      </BorderPane>
+   </children>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+</AnchorPane>

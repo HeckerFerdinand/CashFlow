@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1002.0" stylesheets="@Home1.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ANLB99Controller">
+   <children>
+      <BorderPane stylesheets="@Home1.css">
+         <top>
+            <VBox prefHeight="150.0" prefWidth="1002.0" BorderPane.alignment="CENTER">
+               <children>
+                  <VBox prefHeight="96.0" prefWidth="1930.0">
+                     <children>
+                        <HBox minHeight="-Infinity" prefHeight="60.0" styleClass="top-bar2" stylesheets="@Home1.css">
+                           <children>
+                              <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="58.0" prefWidth="500.0" text="Arbeitnehmer löschen">
+                                 <font>
+                                    <Font name="Calibri Bold" size="30.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="250.0" right="199.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <Button id="handleclbutton99" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#handleclbutton99b" prefHeight="50.0" prefWidth="45.0" styleClass="button-toplane" stylesheets="@Home1.css" text="x" textAlignment="CENTER">
+                                 <font>
+                                    <Font name="Calibri" size="28.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+         </top>
+         <right>
+            <VBox prefHeight="202.0" prefWidth="1002.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="75.0" prefWidth="800.0" text="Wollen Sie den Arbeitnehmer">
+                     <font>
+                        <Font name="Calibri Bold" size="50.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="100.0" right="100.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="75.0" prefWidth="800.0" text="unwiderruflich löschen?">
+                     <font>
+                        <Font name="Calibri Bold" size="50.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="100.0" />
+                     </VBox.margin>
+                  </Label>
+               </children>
+            </VBox>
+         </right>
+         <bottom>
+            <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleabbbutton99b" prefHeight="100.0" prefWidth="250.0" styleClass="button-choose-delete" stylesheets="@Home1.css" text="Abbrechen">
+                     <font>
+                        <Font name="Calibri Bold" size="40.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="150.0" top="100.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlelöschenbutton99b" prefHeight="100.0" prefWidth="250.0" styleClass="button-choose-delete" stylesheets="@Home1.css" text="Löschen">
+                     <font>
+                        <Font name="Calibri Bold" size="40.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="102.0" top="100.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </bottom>
+      </BorderPane>
+   </children>
+   <styleClass>
+      <String fx:value="umrandung" />
+      <String fx:value="backround-colorlight" />
+   </styleClass>
+</AnchorPane>

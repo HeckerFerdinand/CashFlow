@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1048.0" prefWidth="1926.0" styleClass="backround-color" stylesheets="@Home1.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ANAN4Controller">
+   <children>
+      <BorderPane layoutX="8.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1048.0" prefWidth="1926.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="1928.0" BorderPane.alignment="CENTER">
+               <children>
+                  <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="1930.0" styleClass="top-bar2" stylesheets="@Home1.css">
+                     <children>
+                        <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="58.0" prefWidth="500.0" styleClass="black" stylesheets="@Home1.css" text="Arbeitnehmer anlegen">
+                           <font>
+                              <Font name="Calibri Bold" size="30.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="712.0" right="600.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Button fx:id="klbutton4h" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#handleklbutton4h" styleClass="button-toplane" stylesheets="@Home1.css" text="–" textAlignment="CENTER">
+                           <font>
+                              <Font name="Calibri" size="28.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </Button>
+                        <Button fx:id="clbutton4h" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#handleclbutton4h" styleClass="button-toplane" stylesheets="@Home1.css" text="x" textAlignment="CENTER">
+                           <font>
+                              <Font name="Calibri" size="28.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="86.0" prefWidth="1904.0">
+                     <VBox.margin>
+                        <Insets bottom="25.0" left="25.0" right="25.0" />
+                     </VBox.margin>
+                     <children>
+                        <Button fx:id="backbutton4h" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handlebackbutton4h" prefHeight="50.0" prefWidth="125.0" styleClass="button-back" stylesheets="@Home1.css" text="Zurück">
+                           <font>
+                              <Font size="41.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets top="25.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin>
+                     <children>
+                        <Label prefHeight="53.0" prefWidth="610.0" text="Meldedaten">
+                           <font>
+                              <Font name="Calibri Bold" size="45.0" />
+                           </font>
+                           <padding>
+                              <Insets left="50.0" />
+                           </padding>
+                        </Label>
+                        <Label prefHeight="53.0" prefWidth="610.0" text="Beiträge">
+                           <font>
+                              <Font name="Calibri Bold" size="45.0" />
+                           </font>
+                           <padding>
+                              <Insets left="50.0" />
+                           </padding>
+                           <HBox.margin>
+                              <Insets left="150.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </top>
+         <left>
+            <VBox prefHeight="764.0" prefWidth="410.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="400.0" styleClass="label-sdvinput" stylesheets="@Home1.css" text="Tätigkeitsschlüssel">
+                     <VBox.margin>
+                        <Insets left="50.0" top="60.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="400.0" styleClass="label-sdvinput" stylesheets="@Home1.css" text="BGR-Schlüssel">
+                     <VBox.margin>
+                        <Insets left="50.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="400.0" styleClass="label-sdvinput" stylesheets="@Home1.css" text="Personengruppe">
+                     <VBox.margin>
+                        <Insets left="50.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="400.0" styleClass="label-sdvinput" stylesheets="@Home1.css" text="Steuer-ID">
+                     <VBox.margin>
+                        <Insets left="50.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="400.0" styleClass="label-sdvinput" stylesheets="@Home1.css" text="Gleitzone">
+                     <VBox.margin>
+                        <Insets left="50.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="400.0" styleClass="label-sdvinput" stylesheets="@Home1.css" text="mtl. Vergütung (€)">
+                     <VBox.margin>
+                        <Insets left="50.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="400.0" styleClass="label-sdvinput" stylesheets="@Home1.css" text="Stundensatz (€/ Std.)">
+                     <VBox.margin>
+                        <Insets left="50.0" top="10.0" />
+                     </VBox.margin>
+                  </Label>
+               </children>
+            </VBox>
+         </left>
+         <center>
+            <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <TextField fx:id="antätigkeittextfield4h" styleClass="textfield-input" stylesheets="@Home1.css">
+                           <VBox.margin>
+                              <Insets top="63.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <TextField fx:id="anbgrtextfield4h" styleClass="textfield-input" stylesheets="@Home1.css">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <TextField fx:id="anpgruppetextfield4h" styleClass="textfield-input" stylesheets="@Home1.css">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <TextField fx:id="anstidtextfield4h" styleClass="textfield-input" stylesheets="@Home1.css">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <TextField fx:id="angleittextfield4h" styleClass="textfield-input" stylesheets="@Home1.css">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <TextField fx:id="anmtlvtextfield4h" styleClass="textfield-input" stylesheets="@Home1.css">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <TextField fx:id="rhtextfield4h" styleClass="textfield-input" stylesheets="@Home1.css">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </TextField>
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="848.0" prefWidth="300.0">
+                     <children>
+                        <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="400.0" styleClass="label-sdvinput" stylesheets="@Home1.css" text="Krankenvers. (%)">
+                           <VBox.margin>
+                              <Insets left="50.0" top="50.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="400.0" styleClass="label-sdvinput" stylesheets="@Home1.css" text="Rentenvers. (%)">
+                           <VBox.margin>
+                              <Insets left="50.0" top="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="400.0" styleClass="label-sdvinput" stylesheets="@Home1.css" text="Umlage 1 (%)">
+                           <VBox.margin>
+                              <Insets left="50.0" top="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="400.0" styleClass="label-sdvinput" stylesheets="@Home1.css" text="Umlage 2 (%)">
+                           <VBox.margin>
+                              <Insets left="50.0" top="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="400.0" styleClass="label-sdvinput" stylesheets="@Home1.css" text="Insolvenzbeitrag (%)">
+                           <VBox.margin>
+                              <Insets left="50.0" top="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="400.0" styleClass="label-sdvinput" stylesheets="@Home1.css" text="Steuer (%)">
+                           <VBox.margin>
+                              <Insets left="50.0" top="10.0" />
+                           </VBox.margin>
+                        </Label>
+                     </children>
+                     <HBox.margin>
+                        <Insets left="50.0" />
+                     </HBox.margin>
+                  </VBox>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <TextField fx:id="ankvtextfield4h" styleClass="textfield-input" stylesheets="@Home1.css">
+                           <VBox.margin>
+                              <Insets top="63.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <TextField fx:id="anrvtextfield4h" styleClass="textfield-input" stylesheets="@Home1.css">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <TextField fx:id="anu1textfield4h" styleClass="textfield-input" stylesheets="@Home1.css">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <TextField fx:id="anu2textfield4h" styleClass="textfield-input" stylesheets="@Home1.css">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <TextField fx:id="aninsotextfield4h" styleClass="textfield-input" stylesheets="@Home1.css">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <TextField fx:id="ansttextfield4h" styleClass="textfield-input" stylesheets="@Home1.css">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </TextField>
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="848.0" prefWidth="514.0">
+                     <children>
+                        <Button fx:id="weiterbutton4h" mnemonicParsing="false" onAction="#handleweiterbutton4h" styleClass="button-speichern" stylesheets="@Home1.css" text="Weiter">
+                           <VBox.margin>
+                              <Insets top="642.0" />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>

@@ -1,0 +1,302 @@
+.root{
+
+}
+.general-backround {
+    -fx-background-color: transparent;
+}
+.black{
+    -fx-text-color: #000000;
+}
+.headline {
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-font-family: "Calibri";
+    -fx-background-color: #267f3f;
+    -fx-background-radius: 0;
+}
+.headline-small {
+    -fx-text-fill: black;
+    -fx-font-weight: normal;
+    -fx-font-family: "Calibri";
+    -fx-background-color: #267f3f;
+    -fx-background-radius: 0;
+}
+.backround-color{
+    -fx-background-color: #bfbfbf;
+}
+.backround-colorlight{
+    -fx-background-color: #cacaca;
+}
+.umrandung{
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+}
+.version-text{
+    -fx-text-fill: black;
+}
+.button-choose1{
+    -fx-text-fill: black;
+    -fx-background-color: #267f3f;
+    -fx-background-radius: 5;
+}
+.button-choose2{
+    -fx-text-fill: black;
+    -fx-background-color: #267f3f;
+    -fx-background-radius: 5;
+    -fx-font-family: "Calibri";
+    -fx-font-size: 30;
+    -fx-pref-width: 400;
+    -fx-pref-height: 100;
+    -fx-min-width: 400;
+    -fx-min-height: 100;
+    -fx-mac-width: 400;
+    -fx-max-height: 100;
+}
+.button-bottomlane{
+    -fx-text-fill: black;
+    -fx-background-color: transparent;
+    -fx-alignment: center-left;
+}
+.button-toplane{
+    -fx-text-fill: black;
+    -fx-background-color: transparent;
+    /*-fx-alignment: center-right;*/
+    -fx-font-size: 28;
+    -fx-font-family: "Calibri";
+}
+.button-closepopup{
+    -fx-text-fill: black;
+    -fx-background-color: #267f3f;
+    -fx-font-weight: bold;
+    -fx-font-size: 20;
+    -fx-font-family: "Calibri";
+
+}
+.top-bar2{
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+    -fx-background-color: #267f3f;
+}
+.button-back {
+    -fx-text-fill: black;
+    -fx-background-color: transparent;
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+    -fx-border-radius: 5;
+    -fx-padding: 10;
+    -fx-font-family: "Calibri";
+    -fx-font-size: 23;
+    -fx-min-width: 125;
+    -fx-text-alignment: center;
+}
+.choicebox-anw{
+    -fx-text-fill: black;
+    -fx-background-color: #267f3f;
+    -fx-font-weight: normal;
+    -fx-font-size: 25;
+    -fx-font-family: "Calibri";
+    -fx-min-width: 700;
+    -fx-min-height: 75;
+    -fx-max-width: 700;
+    -fx-max-height: 75;
+}
+.choicebox-anw-popup{
+    -fx-text-fill: black;
+    -fx-background-color: #267f3f;
+    -fx-font-weight: normal;
+    -fx-font-size: 25;
+    -fx-font-family: "Calibri";
+    -fx-min-width: 700;
+    -fx-min-height: 75;
+    -fx-max-width: 700;
+    -fx-max-height: 75;
+}
+.const-box{
+    -fx-text-fill: black;
+    -fx-background-color: #7bab15;
+    -fx-font-weight: normal;
+    -fx-font-size: 25;
+    -fx-font-family: "Calibri";
+    -fx-min-width: 500;
+    -fx-min-height: 850;
+}
+.label-input{
+    -fx-text-fill: black;
+    -fx-font-weight: normal;
+    -fx-font-family: "Calibri";
+    -fx-font-size: 40;
+    -fx-min-width: 400;
+    -fx-min-height: 60;
+    -fx-max-width: 400;
+    -fx-max-height: 60;
+}
+.label-sdvinput{
+    -fx-text-fill: black;
+    -fx-font-weight: normal;
+    -fx-font-family: "Calibri";
+    -fx-font-size: 40;
+    -fx-min-width: 360;
+    -fx-min-height: 60;
+    -fx-max-width: 360;
+    -fx-max-height: 60;
+}
+.label-h-input{
+    -fx-text-fill: black;
+    -fx-font-weight: normal;
+    -fx-font-family: "Calibri";
+    -fx-font-size: 40;
+    -fx-min-width: 200;
+    -fx-min-height: 60;
+    -fx-max-width: 200;
+    -fx-max-height: 60;
+}
+.choicebox-input{
+    -fx-text-fill: black;
+    -fx-background-color: #676767;
+    -fx-font-weight: normal;
+    -fx-font-size: 30;
+    -fx-font-family: "Calibri";
+    -fx-min-width: 300;
+    -fx-min-height: 60;
+    -fx-max-width: 300;
+    -fx-max-height: 60;
+}
+.textfield-input{
+    -fx-text-fill: black;
+    -fx-font-weight: normal;
+    -fx-font-family: "Calibri";
+    -fx-font-size: 30;
+    -fx-background-color: #676767;
+    -fx-min-width: 300;
+    -fx-min-height: 60;
+    -fx-max-width: 300;
+    -fx-max-height: 60;
+}
+.button-speichern{
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+    -fx-font-family: "Calibri";
+    -fx-font-size: 30;
+    -fx-background-color: #267f3f;
+    -fx-min-width: 400;
+    -fx-min-height: 100;
+    -fx-max-width: 400;
+    -fx-max-height: 100;
+}
+.checkbox .box {
+    -fx-background-color: #676767;
+}
+.checkbox-lohn .box {
+    -fx-background-color: #7395ff;
+}
+.checkbox-zeit .box {
+    -fx-background-color: #ffae83;
+}
+.checkbox .box .mark{
+    -fx-background-color: transparent;
+}
+.checkbox:selected .box .mark{
+    -fx-background-color: black;
+}
+.button-choose-delete{
+    -fx-text-fill: black;
+    -fx-background-color: #267f3f;
+    -fx-background-radius: 5;
+    -fx-font-family: "Calibri";
+    -fx-font-weight: bold;
+    -fx-font-size: 40;
+    -fx-pref-width: 300;
+    -fx-pref-height: 100;
+    -fx-min-width: 300;
+    -fx-min-height: 100;
+    -fx-max-width: 300;
+    -fx-max-height: 100;
+}
+.table-view {
+    -fx-border-color: #000000;
+    -fx-border-width: 1px;
+    -fx-background-color: #676767;
+    -fx-font-family: "Calibri";
+    -fx-font-weight: normal;
+    -fx-font-size: 20;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #58dd2d;
+    -fx-border-width: 1px;
+    -fx-border-color: #000000;
+}
+
+.table-view .table-row-cell {
+    -fx-background-color: #676767;
+    -fx-border-color: transparent;
+    -fx-border-width: 1px;
+}
+
+.table-view .table-cell {
+    -fx-font-size: 20px;
+    -fx-font-family: "Calibri";
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+}
+
+/* checkbox-style.css */
+
+/* Für Checkboxen des Lohn-Typs */
+.lohn-check .box {
+    -fx-background-color: #7395ff;
+    -fx-background-insets: 0;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-opacity: 1; /* Macht die Farbe sichtbar auch wenn disabled */
+    -fx-accent: #000000;
+}
+
+/* Für Checkboxen des Zeit-Typs */
+.zeit-check .box {
+    -fx-background-color: #ffae83;
+    -fx-background-insets: 0;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-opacity: 1; /* Macht die Farbe sichtbar auch wenn disabled */
+    -fx-accent: #000000;
+}
+
+/* Kein Fokusrahmen bei Klick */
+.check-box:focused .box {
+    -fx-effect: null;
+    -fx-border-color: transparent;
+}
+
+/* Kein Fokus-Leuchten */
+.check-box:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+/* Verhindert generelles Ausbleichen, wenn deaktiviert */
+.check-box:disabled {
+    -fx-opacity: 1;
+}
+
+.name-label {
+    -fx-font-size: 16px;     /* Schriftgröße */
+    -fx-alignment: center-left; /* Vertikal zentriert, linksbündig */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
