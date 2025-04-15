@@ -22,9 +22,13 @@ public class Home1Controller {
         }
     }
 
-    //Klick auf "Nutzungsbedingungen"
+    //Klick auf "Update-Protokoll"
     public void handlenbbutton1() {
-
+        try {
+            Main.openProtokoll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //Klick auf "Impressum"
@@ -34,11 +38,6 @@ public class Home1Controller {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    //Klick auf "Hilfe und Support"
-    public void handlehsbutton1() {
-
     }
 
     //Klick auf "-"

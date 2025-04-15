@@ -20,6 +20,7 @@ public class Main extends Application {
 
     static Stage window1;
     static Stage window2;
+    static Stage window3;
     private ANW99PopupController anw99Controller;
 
 
@@ -66,6 +67,23 @@ public class Main extends Application {
 
     public static void closeImpressum(){
         window2.close();
+    }
+
+    public static void openProtokoll(){
+        try{
+            window3 = new Stage();
+            Parent scene1 = FXMLLoader.load(Main.class.getResource("/PROT99.fxml"));
+            window3.setScene(new Scene(scene1));
+            window3.initStyle(StageStyle.UNDECORATED);
+            window3.show();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void closeProtokoll(){
+        window3.close();
     }
 
     public static void changeScene(String fxml) throws IOException {

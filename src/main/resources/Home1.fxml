@@ -91,17 +91,12 @@
          <bottom>
             <HBox alignment="TOP_RIGHT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="59.0" prefWidth="1929.0" styleClass="general-backround" stylesheets="@Home1.css" BorderPane.alignment="TOP_RIGHT">
                <children>
-                  <Button id="hsbutton1" mnemonicParsing="false" onAction="#handlehsbutton1" prefHeight="81.0" prefWidth="170.0" styleClass="button-bottomlane" stylesheets="@Home1.css" text="Hilfe und Support" underline="true">
-                     <font>
-                        <Font name="Calibri" size="20.0" />
-                     </font>
-                  </Button>
-                  <Button id="nbbutton1" mnemonicParsing="false" onAction="#handlenbbutton1" prefHeight="65.0" prefWidth="209.0" styleClass="button-bottomlane" stylesheets="@Home1.css" text="Nutzungsbedingungen" underline="true">
+                  <Button id="nbbutton1" mnemonicParsing="false" onAction="#handlenbbutton1" prefHeight="65.0" prefWidth="209.0" styleClass="button-bottomlane" stylesheets="@Home1.css" text="Update-Protokoll" underline="true">
                      <font>
                         <Font name="Calibri" size="20.0" />
                      </font>
                      <HBox.margin>
-                        <Insets left="50.0" right="50.0" />
+                        <Insets right="50.0" />
                      </HBox.margin>
                   </Button>
                   <Button id="ipbutton1" mnemonicParsing="false" onAction="#handleipbutton1" prefHeight="65.0" prefWidth="117.0" styleClass="button-bottomlane" stylesheets="@Home1.css" text="Impressum" underline="true">
@@ -109,7 +104,7 @@
                         <Font name="Calibri" size="20.0" />
                      </font>
                      <HBox.margin>
-                        <Insets right="1200.0" />
+                        <Insets right="1400.0" />
                      </HBox.margin>
                   </Button>
                   <Label prefHeight="64.0" prefWidth="119.0" styleClass="version-text" stylesheets="@Home1.css" text="version 0.1">
