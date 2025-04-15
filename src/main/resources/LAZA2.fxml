@@ -67,7 +67,7 @@
                         <Insets bottom="25.0" left="181.0" right="281.0" top="25.0" />
                      </VBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" styleClass="button-choose2" stylesheets="@Home1.css" text="Zeitjournal jährl. (.pdf)">
+                  <Button fx:id="zjbutton2" mnemonicParsing="false" onAction="#handlezjbutton2" styleClass="button-choose2" stylesheets="@Home1.css" text="Zeitjournal jährl. (.pdf)">
                      <VBox.margin>
                         <Insets bottom="25.0" left="181.0" right="281.0" />
                      </VBox.margin>

@@ -316,7 +316,7 @@ public class PDFmtllohnabrechnung {
             imageCell.addElement(img);
             imageCell.setPaddingRight(6);
             kleingedrucktesTable.addCell(imageCell);
-            kleingedrucktesTable.addCell(createCell("Diese Dokument wurde von CashFlow generiert.", small, Element.ALIGN_LEFT, 0, 5, 5, false));
+            kleingedrucktesTable.addCell(createCell("Dieses Dokument wurde von CashFlow generiert.", small, Element.ALIGN_LEFT, 0, 5, 5, false));
             kleingedrucktesTable.addCell(createCell("CashFlow", fat, Element.ALIGN_RIGHT, 0, 5, 5, false));
 
             //Inhalte hinzufügen

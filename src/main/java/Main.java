@@ -234,9 +234,7 @@ public class Main extends Application {
             Parent root = loader.load();
             FORT3Controller controller = loader.getController();
             for (int i = 0; i < anlist.size(); i++) {
-
                 controller.addRow(anlist.get(i), lohnlist.get(i), zeitlist.get(i));
-                System.out.println(anlist.get(i) + lohnlist.get(i) + zeitlist.get(i));
             }
             window1.getScene().setRoot(root); }
         catch (IOException e) {

@@ -64,7 +64,6 @@ public class SQLConnectionBase {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        //abcde
         return result;
     }
 
@@ -127,6 +126,33 @@ public class SQLConnectionBase {
             return selectoutput;
         }
     }
+
+    public double selectmtldoubleContent(String table, String content, String month, String year) {
+        String url = "jdbc:postgresql://localhost:5432/postgres";
+        String username = "postgres";
+        String password = "0000";
+        try {
+            String command = "SELECT " + content + " FROM \"" + table + "\" WHERE monat = '" + month + "' AND jahr = '" + year + "';";
+            Class.forName("org.postgresql.Driver");
+            Connection con = DriverManager.getConnection(url, username, password);
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(command);
+            if (rs.next()) {
+                selectoutput = rs.getString(1);
+            }
+            else {
+                selectoutput = "";
+            }
+            con.close();
+        }
+        catch (SQLException | ClassNotFoundException exception) {
+            exception.printStackTrace();
+        }
+        finally {
+            return Double.parseDouble(selectoutput);
+        }
+    }
+
 
     public void updateConstContent(String table, String id, String anvorname, String annachname, String angeburtsname, String anstraße, String anhausnummer, String anpostleitzahl, String anort, String angeburtsdatum, String angeschlecht, String anstaatsangehörigkeit, String anpersonalnummer, String ansvnummer, String antaetigkeitsschluessel, String anbgrschluessel, String anberufsbezeichnung, String anpersonengruppe, String ansteuerid, String angleitzone, String anbeschaeftugungsbeginn, String anmtlverguetung, String stringankv, String stringanrv, String stringanu1, String stringanu2, String stringaninso, String stringanst, String agname, String agbetriebsnummer, String agsteuernummer, String agstraße, String aghausnummer, String agpostleitzahl, String agort, String agname2, String anregiestundenverguetung) {
         String url = "jdbc:postgresql://localhost:5432/postgres";

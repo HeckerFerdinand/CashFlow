@@ -12,7 +12,7 @@ import java.util.Map;
 public class LAZA2Controller {
 
 
-    //Klick auf "Lohnabrechnung"
+    //Klick auf "Lohnerfassung"
     @FXML
     public void handlelerfbutton2() {
         Main.openANWPopup("/ANW99.fxml", () -> {
@@ -34,7 +34,7 @@ public class LAZA2Controller {
         });
     }
 
-    //Klick auf "Zeitabrechnung"
+    //Klick auf "Zeiterfassung"
     @FXML
     public void handlezerfbutton2() {
         Main.openANWPopup("/ANW99.fxml", () -> {
@@ -65,7 +65,7 @@ public class LAZA2Controller {
                 LocalDate localDate = LocalDate.now();
                 String datum = localDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
                 String sjahr = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
-                int djahr = Integer.parseInt(sjahr) - 1;
+                int djahr = Integer.parseInt(sjahr);
                 String jahr = String.valueOf(djahr);
                 pdFjährlohnjournal.print(anid, datum, jahr);
             }
@@ -73,6 +73,27 @@ public class LAZA2Controller {
                 e.printStackTrace();
             }
         });
+    }
+
+    //Klick auf "Zeitjournal jährl."
+    @FXML
+    public void handlezjbutton2(ActionEvent event) {
+        Main.openANWPopup("/ANW99.fxml", () -> {
+            try {
+                String anid = ANW99PopupController.anid;
+                PDFjährzeitjournal pdFjährzeitjournal = new PDFjährzeitjournal();
+                LocalDate localDate = LocalDate.now();
+                String datum = localDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+                String sjahr = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
+                int djahr = Integer.parseInt(sjahr);
+                String jahr = String.valueOf(djahr);
+                pdFjährzeitjournal.print(anid, datum, jahr);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
     }
 
     //Klick auf "Fortschritt einsehen"
