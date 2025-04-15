@@ -40,7 +40,7 @@ public class FORT3Controller {
 
         // Monatsspalten
         String[] months = {"JAN", "FEB", "MÄR", "APR", "MAI", "JUN",
-                "JUL", "AUG", "SEP", "OKT", "NOV", "DEZ", "JAN"};
+                "JUL", "AUG", "SEP", "OKT", "NOV", "DEZ", "+JAN"};
 
         for (String month : months) {
             TableColumn<RowData, Void> monthColumn = new TableColumn<>(month);
@@ -84,6 +84,7 @@ public class FORT3Controller {
             case "OKT" -> row.oktCheck1Property();
             case "NOV" -> row.novCheck1Property();
             case "DEZ" -> row.dezCheck1Property();
+            case "+JAN" -> row.jan2Check1Property();
             default -> row.jan2Check1Property();
         };
     }
@@ -102,6 +103,7 @@ public class FORT3Controller {
             case "OKT" -> row.oktCheck2Property();
             case "NOV" -> row.novCheck2Property();
             case "DEZ" -> row.dezCheck2Property();
+            case "+JAN" -> row.jan2Check2Property();
             default -> row.jan2Check2Property();
         };
     }
@@ -122,8 +124,10 @@ public class FORT3Controller {
                 checks1.get(10), checks2.get(10),
                 checks1.get(11), checks2.get(11),
                 checks1.get(12), checks2.get(12)
+
         ));
     }
+
 
 
     public static class RowData {
@@ -188,6 +192,7 @@ public class FORT3Controller {
             dezCheck1.set(dez1); dezCheck2.set(dez2);
             jan2Check1.set(jan21); jan2Check2.set(jan22);
         }
+
 
         // Getter-Methoden
         public StringProperty nameProperty() { return name; }

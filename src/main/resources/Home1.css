@@ -287,6 +287,50 @@
     -fx-alignment: center-left; /* Vertikal zentriert, linksbündig */
 }
 
+/* Styling der gesamten ChoiceBox */
+.custom-choicebox {
+    -fx-background-color: #267f3f;
+    -fx-border-color: #267f3f;
+    -fx-border-radius: 4px;
+    -fx-pref-width: 750px;
+}
+
+/* Dropdown-Liste */
+.custom-choicebox .context-menu {
+    -fx-background-color: #267f3f;
+    -fx-pref-width: 700px;
+    -fx-border-width: 0, 0, 1, 0;
+    -fx-border-color: #000000;
+    -fx-border-radius: 4px;
+
+}
+
+/* Einträge in der Liste */
+.custom-choicebox .menu-item {
+    -fx-padding: 8px 12px;
+    -fx-font-size: 20px;
+    -fx-border-width: 0, 0, 1, 0;
+    -fx-border-color: #000000;
+    -fx-font-family: Calibri;
+    -fx-border-radius: 4px;
+}
+
+.custom-choicebox .menu-item:hover {
+    -fx-background-color: #19552a;
+}
+
+/* Angezeigter ausgewählter Wert */
+.custom-choicebox .label {
+    -fx-text-fill: #000000;
+    -fx-font-size: 25px;
+    -fx-font-family: Calibri;
+    -fx-border-radius: 4px;
+}
+
+/* Pfeil-Button */
+.custom-choicebox .arrow {
+    -fx-background-color: #000000;
+}
 
 
 

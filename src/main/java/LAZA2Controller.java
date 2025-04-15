@@ -65,7 +65,7 @@ public class LAZA2Controller {
                 LocalDate localDate = LocalDate.now();
                 String datum = localDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
                 String sjahr = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
-                int djahr = Integer.parseInt(sjahr);
+                int djahr = Integer.parseInt(sjahr) - 1;
                 String jahr = String.valueOf(djahr);
                 pdFjährlohnjournal.print(anid, datum, jahr);
             }
@@ -85,7 +85,7 @@ public class LAZA2Controller {
                 LocalDate localDate = LocalDate.now();
                 String datum = localDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
                 String sjahr = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
-                int djahr = Integer.parseInt(sjahr);
+                int djahr = Integer.parseInt(sjahr) - 1;
                 String jahr = String.valueOf(djahr);
                 pdFjährzeitjournal.print(anid, datum, jahr);
             }
@@ -110,7 +110,7 @@ public class LAZA2Controller {
             for (int i = 0; i < ids.size(); i++) {
                 String zeitkey = "zeitkey" + ids.get(i);
                 ArrayList<Boolean> zeitboolean = new ArrayList<Boolean>();
-                for (int j = 0; j < 13; j++) {
+                for (int j = 0; j < 12; j++) {
                     String month = "";
                     LocalDate localDate = LocalDate.now();
                     String year = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
@@ -151,24 +151,26 @@ public class LAZA2Controller {
                         case 11:
                             month = "Dezember";
                             break;
-                        case 12:
-                            month = "Januar";
-                            break;
-                            default:
-                                month = "";
                     }
                     boolean zeitexists = sqlConnection.selectzeitexists(ids.get(i), month, year);
                     zeitboolean.add(zeitexists);
                 }
+                LocalDate localDate = LocalDate.now();
+                String year13 = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
+                int nextYear = Integer.parseInt(year13) + 1;
+                year13 = String.valueOf(nextYear);
+                System.out.println(year13);
+                boolean zetiexists13 = sqlConnection.selectzeitexists(ids.get(i), "Januar", year13);
+                zeitboolean.add(zetiexists13);
                 zeitMap.put(zeitkey, zeitboolean);
 
 
                 String lohnkey = "lohnkey" + ids.get(i);
                 ArrayList<Boolean> lohnboolean = new ArrayList<Boolean>();
-                for (int j = 0; j < 13; j++) {
+                for (int j = 0; j < 12; j++) {
                     String month = "";
-                    LocalDate localDate = LocalDate.now();
-                    String year = localDate.format(DateTimeFormatter.ofPattern("yyyy"));
+                    LocalDate localDate2 = LocalDate.now();
+                    String year = localDate2.format(DateTimeFormatter.ofPattern("yyyy"));
                     switch (j) {
                         case 0:
                             month = "Januar";
@@ -206,19 +208,22 @@ public class LAZA2Controller {
                         case 11:
                             month = "Dezember";
                             break;
-                        case 12:
-                            month = "Januar";
-                            break;
-                        default:
-                            month = "";
                     }
                     boolean lohnexists = sqlConnection.selectlohnexists(ids.get(i), month, year);
                     lohnboolean.add(lohnexists);
+                    System.out.println(lohnboolean.size());
                 }
+                boolean lohnexists13 = sqlConnection.selectlohnexists(ids.get(i), "Januar", year13);
+                System.out.println(lohnexists13);
+                lohnboolean.add(lohnexists13);
+                System.out.println(lohnboolean.size());
                 lohnMap.put(lohnkey, lohnboolean);
+                System.out.println(lohnMap);
+
 
                 anlist.add(sqlConnection.selectConstContent("arbeitnehmerkonstanten", "anpersonalnummer", ids.get(i)).concat(" ").concat(sqlConnection.selectConstContent("arbeitnehmerkonstanten", "anvorname", ids.get(i))).concat(" ").concat(sqlConnection.selectConstContent("arbeitnehmerkonstanten", "annachname", ids.get(i))));
                 lohnlist.add(lohnMap.get(lohnkey));
+                System.out.println(lohnlist);
                 zeitlist.add(zeitMap.get(zeitkey));
             }
             Main.setFORT3Content(anlist, lohnlist, zeitlist);
