@@ -141,6 +141,8 @@ public class Main extends Application {
             controller.setrhlabel3a(rhlabel3a);
             controller.setyears();
             controller.setmonths();
+            controller.setupBasicStyling1();
+            controller.setupBasicStyling2();
             window1.getScene().setRoot(root); }
         catch (IOException e) {
             e.printStackTrace();
@@ -160,6 +162,8 @@ public class Main extends Application {
             controller.setdaylabel3e(daylabel3e);
             controller.setyears();
             controller.setmonths();
+            controller.setupBasicStyling1();
+            controller.setupBasicStyling2();
             window1.getScene().setRoot(root); }
         catch (IOException e) {
             e.printStackTrace();

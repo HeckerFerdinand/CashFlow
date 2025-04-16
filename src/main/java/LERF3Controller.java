@@ -210,4 +210,28 @@ public class LERF3Controller {
         monthlist.add("Dezember");
         monthchoicebox3a.getItems().addAll(monthlist);
     }
+
+    public void setupBasicStyling1() {
+        // CSS-Klassen direkt zuweisen
+        yearchoicebox3a.getStyleClass().add("monthyear-choicebox");
+
+        // Stylesheet erzwingen
+        yearchoicebox3a.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.getStylesheets().add(getClass().getResource("/Home1.css").toExternalForm());
+            }
+        });
+    }
+
+    public void setupBasicStyling2() {
+        // CSS-Klassen direkt zuweisen
+        monthchoicebox3a.getStyleClass().add("monthyear-choicebox");
+
+        // Stylesheet erzwingen
+        monthchoicebox3a.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.getStylesheets().add(getClass().getResource("/Home1.css").toExternalForm());
+            }
+        });
+    }
 }

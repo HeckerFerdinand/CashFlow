@@ -199,11 +199,6 @@
                         <Insets left="50.0" top="50.0" />
                      </VBox.margin>
                   </Label>
-                  <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="400.0" styleClass="label-input" stylesheets="@Home1.css" text="Arbeitszeit Übertrag">
-                     <VBox.margin>
-                        <Insets left="50.0" top="50.0" />
-                     </VBox.margin>
-                  </Label>
                   <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="400.0" styleClass="label-input" stylesheets="@Home1.css" text="Urlaubstage">
                      <VBox.margin>
                         <Insets left="50.0" top="50.0" />
@@ -242,11 +237,6 @@
                               <Insets top="50.0" />
                            </VBox.margin>
                         </TextField>
-                        <TextField fx:id="azuetextfield3e" styleClass="textfield-input" stylesheets="@Home1.css">
-                           <VBox.margin>
-                              <Insets top="50.0" />
-                           </VBox.margin>
-                        </TextField>
                         <TextField fx:id="uttextfield3e" styleClass="textfield-input" stylesheets="@Home1.css">
                            <VBox.margin>
                               <Insets top="50.0" />
@@ -264,11 +254,6 @@
                         <Label styleClass="label-h-input" stylesheets="@Home1.css" text="Std.">
                            <VBox.margin>
                               <Insets left="10.0" top="270.0" />
-                           </VBox.margin>
-                        </Label>
-                        <Label styleClass="label-h-input" stylesheets="@Home1.css" text="Std.">
-                           <VBox.margin>
-                              <Insets left="10.0" top="50.0" />
                            </VBox.margin>
                         </Label>
                         <Label styleClass="label-h-input" stylesheets="@Home1.css" text="Std.">

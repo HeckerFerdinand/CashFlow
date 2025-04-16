@@ -70,7 +70,7 @@ public class ZERF3Controller {
             month3e = monthchoicebox3e.getValue();
             arbeitszeit3e = aztextfield3e.getText();
             arbeitszeitregie3e = azrtextfield3e.getText();
-            arbeitszeituebertrag3e = azuetextfield3e.getText();
+            arbeitszeituebertrag3e = "0";
             urlaubstage3e = uttextfield3e.getText();
             krankheitstage = kttextfield3e.getText();
             tableid = ANW99PopupController.anid;
@@ -226,5 +226,28 @@ public class ZERF3Controller {
         monthlist.add("November");
         monthlist.add("Dezember");
         monthchoicebox3e.getItems().addAll(monthlist);
+    }
+    public void setupBasicStyling1() {
+        // CSS-Klassen direkt zuweisen
+        yearchoicebox3e.getStyleClass().add("monthyear-choicebox");
+
+        // Stylesheet erzwingen
+        yearchoicebox3e.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.getStylesheets().add(getClass().getResource("/Home1.css").toExternalForm());
+            }
+        });
+    }
+
+    public void setupBasicStyling2() {
+        // CSS-Klassen direkt zuweisen
+        monthchoicebox3e.getStyleClass().add("monthyear-choicebox");
+
+        // Stylesheet erzwingen
+        monthchoicebox3e.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.getStylesheets().add(getClass().getResource("/Home1.css").toExternalForm());
+            }
+        });
     }
 }
