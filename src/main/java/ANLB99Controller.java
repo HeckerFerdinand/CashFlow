@@ -22,7 +22,7 @@ public class ANLB99Controller {
             SQLConnectionBase sqlConnectionBase = new SQLConnectionBase();
             String id = ANW99PopupController.anid;
             sqlConnectionBase.deleteConstContent(id);
-            sqlConnectionBase.dropmtlTable(id);
+            //sqlConnectionBase.dropmtlTable(id);
             popupwindow.close();
             Main.changeScene("/Home1.fxml");
             CONFIRMPopup confirmPopup = new CONFIRMPopup();

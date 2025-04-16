@@ -74,7 +74,7 @@ public class ANAN5Controller {
 
             //Daten abspeichern
             SQLConnectionBase connection = new SQLConnectionBase();
-            String stringcount = connection.selectmaxConstContent("id", "arbeitnehmerkonstanten");
+            String stringcount = connection.selectmaxConstContent("ids", "allids");
             String count;
             if (stringcount == null) {
                 count = "01";
@@ -88,7 +88,7 @@ public class ANAN5Controller {
             }
 
             connection.insertintoConstCalc("arbeitnehmerkonstanten", count, anvorname3h, annachnamename3h, angeburtsnamename3h, anstraße3h, anhausnummer3h, anpostleitzahl3h, anort3h, angeburtsdatum3h, angeschlecht, anstaatssngehörigkeit3h, anpersonalnummer3h, ansvnummer3h, antätigkeit, anbgr, anberufsbezeichnung3h, anpgruppet, anstid, angleit, anbeschäftigungsbeginn3h, anmtlv, ankv, anrv, anu1, anu2, aninso, anst, agname5h, agbnummer5h, agstnummer5h, agstraße5h, aghausnummer5h, agpostleitzahl5h, agorttext5h, agname25h, anrhv);
-
+            connection.insertintoAllIdsTable(count);
             //mtl. Datenbank erstellen
             connection.createmtlTable(count);
 

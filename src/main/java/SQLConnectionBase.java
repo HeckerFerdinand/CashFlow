@@ -98,9 +98,6 @@ public class SQLConnectionBase {
     }
 
 
-
-
-
     public String selectmtlContent(String table, String content, String month, String year) {
         String url = "jdbc:postgresql://localhost:5432/postgres";
         String username = "postgres";
@@ -243,6 +240,30 @@ public class SQLConnectionBase {
             String table = tableid;
             String fullinput = "'" + month + "','" + vergütungbrutto + "','" + sondervergütungbrutto + "','" + auszahlungsbetrag + "','" + year + "','" + gesamtbetragbrutto + "','" + kv + "','" + rv + "','" + u1 + "','" + u2 + "','" + inso + "','" + st + "','" + kva + "','" + rva + "','" + u1a + "','" + u2a + "','" + insoa + "','" + sta + "','" + gesamtbeitrag + "','" + datum + "'";
             String command = "INSERT INTO \"" + table + "\" (monat, verguetungbrutto, sonderverguetungbrutto, auszahlungsbetragbrutto, jahr, gesamtbetragbrutto, kv, rv, u1, u2, inso, st, kva, rva, u1a, u2a, insoa, sta, gesamtbeitrag, datum) VALUES (" + fullinput + ");";
+            System.out.println(command);
+            Class.forName("org.postgresql.Driver");
+            Connection con = DriverManager.getConnection(url, username, password);
+            PreparedStatement preparedStatement = con.prepareStatement(command);
+            int affectedrows = preparedStatement.executeUpdate();
+            if (affectedrows > 0) {
+                System.out.println("Updated");
+            }
+            else {
+                System.out.println("Not updated");
+            }
+            con.close();
+        } catch (SQLException | ClassNotFoundException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    public void insertintoAllIdsTable(String newid){
+        String url = "jdbc:postgresql://localhost:5432/postgres";
+        String username = "postgres";
+        String password = "0000";
+        try {
+
+            String command = "INSERT INTO \"allids\" (ids) VALUES (" + newid + ");";
             System.out.println(command);
             Class.forName("org.postgresql.Driver");
             Connection con = DriverManager.getConnection(url, username, password);
