@@ -149,6 +149,28 @@ public class Main extends Application {
         }
     }
 
+    public static void setLODR3Content(String annamelabel3b, String pnrlabel3b, String agnamelabel3b, String bnrlabel3b, String mvlabel3b, String daylabel3b, String rhlabel3b) {
+        try {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("/LODR3.fxml"));
+            Parent root = loader.load();
+            LODR3Controller controller = loader.getController();
+            controller.setannamelabel3b(annamelabel3b);
+            controller.setpnrlabel3b(pnrlabel3b);
+            controller.setagnamelabel3b(agnamelabel3b);
+            controller.setbnrlabel3b(bnrlabel3b);
+            controller.setmvlabel3b(mvlabel3b);
+            controller.setdaylabel3b(daylabel3b);
+            controller.setrhlabel3b(rhlabel3b);
+            controller.setyears();
+            controller.setmonths();
+            controller.setupBasicStyling1();
+            controller.setupBasicStyling2();
+            window1.getScene().setRoot(root); }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void setZERF3Content(String annamelabel3e, String pnrlabel3e, String agnamelabel3e, String bnrlabel3e, String hlabel3e, String daylabel3e) {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("/ZERF3.fxml"));

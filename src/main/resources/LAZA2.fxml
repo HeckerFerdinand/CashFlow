@@ -97,7 +97,7 @@
                         <Insets left="381.0" right="281.0" top="25.0" />
                      </VBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" styleClass="button-choose2" stylesheets="@Home1.css" text="Lohnabrechnung mtl. (.pdf)">
+                  <Button fx:id="lodrbutton2" mnemonicParsing="false" onAction="#handlelodrbutton2" styleClass="button-choose2" stylesheets="@Home1.css" text="Lohnabrechnung mtl. (.pdf)">
                      <font>
                         <Font size="30.0" />
                      </font>

@@ -85,14 +85,18 @@ public class LERF3Controller {
             lohnabrechnung.print(tableid, date, month3a, year3a);
             //Szene schließen
             Main.changeScene("/LAZA2.fxml");
+            CONFIRMPopup confirmPopup = new CONFIRMPopup();
+            confirmPopup.display("CONFIRM99.fxml");
         }
-        catch (Exception e) {
+        catch(Exception e){
             e.printStackTrace();
             try {
                 Main.changeScene("/LAZA2.fxml");
             }
-            catch (Exception e1) {
-                e1.printStackTrace();
+            catch(Exception e1) {e1.printStackTrace();}
+            finally {
+                CONFIRMPopup confirmPopup = new CONFIRMPopup();
+                confirmPopup.display("NOTCONFIRM99.fxml");
             }
         }
     }

@@ -55,6 +55,30 @@ public class LAZA2Controller {
         });
     }
 
+    //Klick auf "Lohnabr. mtl.(.pdf)"
+    @FXML
+    public void handlelodrbutton2(){
+        Main.openANWPopup("/ANW99.fxml", () -> {
+            try {
+                Main.changeScene("/LODR3.fxml");
+                String anid = ANW99PopupController.anid;
+                SQLConnectionBase sqlConnection = new SQLConnectionBase();
+                String annamelabel3b = sqlConnection.selectConstContent("arbeitnehmerkonstanten","anvorname", anid) + " " + sqlConnection.selectConstContent("arbeitnehmerkonstanten","annachname", anid);
+                String pnrlabel3b = sqlConnection.selectConstContent("arbeitnehmerkonstanten","anpersonalnummer", anid);
+                String agnamelabel3b = sqlConnection.selectConstContent("arbeitnehmerkonstanten","agname", anid);
+                String bnrlabel3b = sqlConnection.selectConstContent("arbeitnehmerkonstanten","agbetriebsnummer", anid);
+                String mvlabel3b = sqlConnection.selectConstContent("arbeitnehmerkonstanten","anmtlverguetung", anid) + "€";
+                String rhlabel3b = sqlConnection.selectConstContent("arbeitnehmerkonstanten","anregiestundenverguetung", anid) + "€/ Std.";
+                LocalDate localDate = LocalDate.now();
+                String daylabel3b = localDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+                Main.setLODR3Content(annamelabel3b, pnrlabel3b, agnamelabel3b, bnrlabel3b, mvlabel3b, daylabel3b, rhlabel3b);
+            }   catch (IOException e) {
+                e.printStackTrace(); }
+        });
+    }
+
+
+
     //Klick auf "Lohnjournal jährl."
     @FXML
     public void handleljbutton2() {
@@ -68,9 +92,13 @@ public class LAZA2Controller {
                 int djahr = Integer.parseInt(sjahr) - 1;
                 String jahr = String.valueOf(djahr);
                 pdFjährlohnjournal.print(anid, datum, jahr);
+                CONFIRMPopup confirmPopup = new CONFIRMPopup();
+                confirmPopup.display("CONFIRM99.fxml");
             }
             catch (Exception e) {
                 e.printStackTrace();
+                CONFIRMPopup confirmPopup = new CONFIRMPopup();
+                confirmPopup.display("NOTCONFIRM99.fxml");
             }
         });
     }
@@ -88,9 +116,13 @@ public class LAZA2Controller {
                 int djahr = Integer.parseInt(sjahr) - 1;
                 String jahr = String.valueOf(djahr);
                 pdFjährzeitjournal.print(anid, datum, jahr);
+                CONFIRMPopup confirmPopup = new CONFIRMPopup();
+                confirmPopup.display("CONFIRM99.fxml");
             }
             catch (Exception e) {
                 e.printStackTrace();
+                CONFIRMPopup confirmPopup = new CONFIRMPopup();
+                confirmPopup.display("NOTCONFIRM99.fxml");
             }
         });
 
