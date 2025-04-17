@@ -107,7 +107,7 @@
                         <Insets right="1400.0" />
                      </HBox.margin>
                   </Button>
-                  <Label prefHeight="64.0" prefWidth="119.0" styleClass="version-text" stylesheets="@Home1.css" text="version 0.1">
+                  <Label prefHeight="64.0" prefWidth="119.0" styleClass="version-text" stylesheets="@Home1.css" text="version 1.0.0">
                      <font>
                         <Font name="Calibri" size="20.0" />
                      </font>
