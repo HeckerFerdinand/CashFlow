@@ -33,6 +33,12 @@ public class Main extends Application {
     }
 
     @Override
+    public void stop() {
+        // Connection Pool beim Beenden der Anwendung schließen
+        DatabaseManager.getInstance().shutdown();
+    }
+
+    @Override
     public void start(Stage primaryStage){
         try{
             window1 = primaryStage;
