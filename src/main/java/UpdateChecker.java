@@ -5,7 +5,7 @@ import javax.swing.JOptionPane;
 
 public class UpdateChecker {
     private static final String VERSION = "1.1.0";
-    private static final String VERSION_URL = "https://gist.githubusercontent.com/HeckerFerdinand/f0e799558d487d925598c8cf560d8cf5/raw/23b64ab7b3553e4f24e7a30b63992a9e3642a530/version.txt";
+    private static final String VERSION_URL = "https://gist.githubusercontent.com/HeckerFerdinand/f0e799558d487d925598c8cf560d8cf5/raw/version.txt";
 
     public static void check() {
         try {
