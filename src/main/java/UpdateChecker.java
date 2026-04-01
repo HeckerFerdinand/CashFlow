@@ -4,7 +4,7 @@ import java.net.URL;
 import javax.swing.JOptionPane;
 
 public class UpdateChecker {
-    private static final String VERSION = "1.1.0";
+    private static final String VERSION = "1.1.1";
     private static final String VERSION_URL = "https://gist.githubusercontent.com/HeckerFerdinand/f0e799558d487d925598c8cf560d8cf5/raw/version.txt";
 
     public static void check() {

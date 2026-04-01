@@ -210,4 +210,23 @@ public class SQLConnectionBase {
             e.printStackTrace();
         }
     }
+
+    public void saveSetting(String key, String value) {
+        String sql = "INSERT INTO app_settings (setting_key, setting_value) VALUES (?, ?) " +
+                "ON CONFLICT (setting_key) DO UPDATE SET setting_value = EXCLUDED.setting_value";
+        executeUpdate(sql, key, value);
+    }
+
+    public String getSetting(String key) {
+        String sql = "SELECT setting_value FROM app_settings WHERE setting_key = ?";
+        return queryString(sql, key);
+    }
+
+    public void checkSettingsTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS app_settings (" +
+                "setting_key TEXT PRIMARY KEY, " +
+                "setting_value TEXT)";
+        executeUpdate(sql);
+        System.out.println("Tabelle app_settings geprüft/erstellt.");
+    }
 }

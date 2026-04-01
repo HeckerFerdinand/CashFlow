@@ -15,15 +15,43 @@ public class PDFjährlohnjournal {
         document.setMargins(30, 30, 5, 5);
         SQLConnectionBase connection = new SQLConnectionBase();
         DecimalFormat dezimalformat = new DecimalFormat("#,##0.00");
-        String docname = jahr + "-12-31 " + connection.selectConstContent("arbeitnehmerkonstanten", "anpersonalnummer", id) + " " + connection.selectConstContent("arbeitnehmerkonstanten", "annachname", id) + " Lohnjournal.pdf";
-        String docfile = "C:/Users/Anwender/IdeaProjects/000HVHecker/CashFlow/" + connection.selectConstContent("arbeitnehmerkonstanten", "anpersonalnummer", id) + " " + connection.selectConstContent("arbeitnehmerkonstanten", "annachname", id) + "/";
-        try {
+        // 1. Basis-Pfad aus der Datenbank holen
+        String baseDir = connection.getSetting("pdf_path");
 
-            PdfWriter.getInstance(document, new FileOutputStream(docfile + docname));
+// Sicherheits-Check für den Fall, dass kein Pfad gesetzt ist
+        if (baseDir == null || baseDir.isEmpty()) {
+            baseDir = System.getProperty("user.home") + java.io.File.separator + "Desktop";
+        }
+
+// 2. Mitarbeiter-Info für Ordner und Dateiname holen
+        String persNr = connection.selectConstContent("arbeitnehmerkonstanten", "anpersonalnummer", id);
+        String nachname = connection.selectConstContent("arbeitnehmerkonstanten", "annachname", id);
+        String employeeFolder = persNr + " " + nachname;
+
+// 3. Pfad zum Mitarbeiter-Ordner sicher zusammenbauen
+        java.nio.file.Path fullPath = java.nio.file.Paths.get(baseDir, employeeFolder);
+
+// 4. Ordner automatisch erstellen (falls nicht vorhanden)
+        try {
+            java.nio.file.Files.createDirectories(fullPath);
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
+
+// 5. Dateiname für das Lohnjournal (fix auf den 31.12. gesetzt, wie in deinem Entwurf)
+        String docname = jahr + "-12-31 " + employeeFolder + " Lohnjournal.pdf";
+        String docfile = fullPath.toString() + java.io.File.separator;
+
+        try {
+            // PDF-Writer mit dem neuen dynamischen Pfad starten
+            PdfWriter.getInstance(document, new java.io.FileOutputStream(docfile + docname));
             document.open();
 
+            // ... dein PDF-Inhalt folgt hier ...
+
             // Schriftarten festlegen
-            BaseFont baseFont = BaseFont.createFont("C:/Windows/Fonts/calibri.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED);
+            byte[] fontBytes = getClass().getResourceAsStream("/calibri.ttf").readAllBytes();
+            BaseFont baseFont = BaseFont.createFont("calibri.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED, BaseFont.CACHED, fontBytes, null);
             Font headlinefat = new Font(baseFont, 14, Font.BOLD, BaseColor.BLACK);
             Font headlinenormal = new Font(baseFont, 14, Font.NORMAL, BaseColor.BLACK);
             Font fat = new Font(baseFont, 10, Font.BOLD, BaseColor.BLACK);
@@ -756,10 +784,16 @@ public class PDFjährlohnjournal {
             kleingedrucktesTable.addCell(createCell("", small, Element.ALIGN_LEFT, 0, 5, 5, false));
             PdfPCell imageCell = new PdfPCell();
             imageCell.setBorder(Rectangle.NO_BORDER);
-            Image img = Image.getInstance("C:/Users/Anwender/IdeaProjects/demo3/src/main/resources/Logo1-removebg.png");
-            img.scaleToFit(30, 30);
-            img.setAlignment(Element.ALIGN_RIGHT);
-            imageCell.addElement(img);
+            java.net.URL logoUrl = getClass().getResource("/Logo1-removebg.png");
+
+            if (logoUrl != null) {
+                Image img = Image.getInstance(logoUrl);
+                img.scaleToFit(30, 30);
+                img.setAlignment(Element.ALIGN_RIGHT);
+                imageCell.addElement(img);
+            } else {
+                System.err.println("Logo konnte nicht gefunden werden! Pfad prüfen.");
+            }
             imageCell.setPaddingRight(6);
             kleingedrucktesTable.addCell(imageCell);
             kleingedrucktesTable.addCell(createCell("Dieses Dokument wurde von CashFlow generiert.", small, Element.ALIGN_LEFT, 0, 5, 5, false));

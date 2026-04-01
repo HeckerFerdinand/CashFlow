@@ -15,15 +15,44 @@ public class PDFjährzeitjournal {
         document.setMargins(30, 30, 5, 5);
         SQLConnectionBase connection = new SQLConnectionBase();
         DecimalFormat dezimalformat = new DecimalFormat("#,##0.00");
-        String docname = jahr + "-12-31 " + connection.selectConstContent("arbeitnehmerkonstanten", "anpersonalnummer", id) + " " + connection.selectConstContent("arbeitnehmerkonstanten", "annachname", id) + " Zeitjournal.pdf";
-        String docfile = "C:/Users/Anwender/IdeaProjects/000HVHecker/CashFlow/" + connection.selectConstContent("arbeitnehmerkonstanten", "anpersonalnummer", id) + " " + connection.selectConstContent("arbeitnehmerkonstanten", "annachname", id) + "/";
-        try {
+        // 1. Basis-Pfad aus der Datenbank abrufen
+        String baseDir = connection.getSetting("pdf_path");
 
-            PdfWriter.getInstance(document, new FileOutputStream(docfile + docname));
+// Notlösung: Falls kein Pfad in der DB hinterlegt ist, Desktop nutzen
+        if (baseDir == null || baseDir.isEmpty()) {
+            baseDir = System.getProperty("user.home") + java.io.File.separator + "Desktop";
+        }
+
+// 2. Mitarbeiter-Identifikation (Personalnummer + Nachname)
+        String anPersonalnummer = connection.selectConstContent("arbeitnehmerkonstanten", "anpersonalnummer", id);
+        String anNachname = connection.selectConstContent("arbeitnehmerkonstanten", "annachname", id);
+        String employeeFolderName = anPersonalnummer + " " + anNachname;
+
+// 3. Den Pfad zum Zielordner plattformunabhängig generieren
+        java.nio.file.Path folderPath = java.nio.file.Paths.get(baseDir, employeeFolderName);
+
+// 4. Sicherstellen, dass der Ordner auf dem NAS existiert
+        try {
+            java.nio.file.Files.createDirectories(folderPath);
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+            // Hier könnte man optional eine Fehlermeldung ausgeben, falls das NAS offline ist
+        }
+
+// 5. Dateiname und finaler Speicherpfad für das Zeitjournal
+        String docname = jahr + "-12-31 " + employeeFolderName + " Zeitjournal.pdf";
+        String docfile = folderPath.toString() + java.io.File.separator;
+
+        try {
+            // PDF-Datei am dynamischen Speicherort erstellen
+            PdfWriter.getInstance(document, new java.io.FileOutputStream(docfile + docname));
             document.open();
 
+            // ... Hier folgt der weitere PDF-Inhalt ...
+
             // Schriftarten festlegen
-            BaseFont baseFont = BaseFont.createFont("C:/Windows/Fonts/calibri.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED);
+            byte[] fontBytes = getClass().getResourceAsStream("/calibri.ttf").readAllBytes();
+            BaseFont baseFont = BaseFont.createFont("calibri.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED, BaseFont.CACHED, fontBytes, null);
             Font headlinefat = new Font(baseFont, 14, Font.BOLD, BaseColor.BLACK);
             Font headlinenormal = new Font(baseFont, 14, Font.NORMAL, BaseColor.BLACK);
             Font fat = new Font(baseFont, 10, Font.BOLD, BaseColor.BLACK);
@@ -400,10 +429,16 @@ public class PDFjährzeitjournal {
             kleingedrucktesTable.addCell(createCell("", small, Element.ALIGN_LEFT, 0, 5, 5, false));
             PdfPCell imageCell = new PdfPCell();
             imageCell.setBorder(Rectangle.NO_BORDER);
-            Image img = Image.getInstance("C:/Users/Anwender/IdeaProjects/demo3/src/main/resources/Logo1-removebg.png");
-            img.scaleToFit(30, 30);
-            img.setAlignment(Element.ALIGN_RIGHT);
-            imageCell.addElement(img);
+            java.net.URL logoUrl = getClass().getResource("/Logo1-removebg.png");
+
+            if (logoUrl != null) {
+                Image img = Image.getInstance(logoUrl);
+                img.scaleToFit(30, 30);
+                img.setAlignment(Element.ALIGN_RIGHT);
+                imageCell.addElement(img);
+            } else {
+                System.err.println("Logo konnte nicht gefunden werden! Pfad prüfen.");
+            }
             imageCell.setPaddingRight(6);
             kleingedrucktesTable.addCell(imageCell);
             kleingedrucktesTable.addCell(createCell("Dieses Dokument wurde von CashFlow generiert.", small, Element.ALIGN_LEFT, 0, 5, 5, false));

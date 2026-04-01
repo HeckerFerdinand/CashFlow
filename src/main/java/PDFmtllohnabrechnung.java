@@ -77,15 +77,41 @@ public class PDFmtllohnabrechnung {
                 break;
             }
         }
-        String docname = jahr + "-" + month + "-" + lastday + " " + connection.selectConstContent("arbeitnehmerkonstanten", "anpersonalnummer", id) + " " + connection.selectConstContent("arbeitnehmerkonstanten", "annachname", id) + " Lohnabrechnung.pdf";
-        String docfile = "C:/Users/Anwender/IdeaProjects/000HVHecker/CashFlow/" + connection.selectConstContent("arbeitnehmerkonstanten", "anpersonalnummer", id) + " " + connection.selectConstContent("arbeitnehmerkonstanten", "annachname", id) + "/";
-        try {
+        // 1. Den Basis-Pfad aus der Datenbank holen
+        String baseDir = connection.getSetting("pdf_path");
 
+// Sicherheits-Check: Falls noch kein Pfad gesetzt wurde, nimm den Desktop als Notlösung
+        if (baseDir == null || baseDir.isEmpty()) {
+            baseDir = System.getProperty("user.home") + java.io.File.separator + "Desktop";
+        }
+
+// 2. Den Namen des Mitarbeiter-Ordners generieren
+        String employeeFolder = connection.selectConstContent("arbeitnehmerkonstanten", "anpersonalnummer", id) + " " +
+                connection.selectConstContent("arbeitnehmerkonstanten", "annachname", id);
+
+// 3. Den vollständigen Pfad sicher zusammenbauen (funktioniert für Win & Mac)
+        java.nio.file.Path fullPath = java.nio.file.Paths.get(baseDir, employeeFolder);
+
+// 4. Den Ordner erstellen, falls er noch nicht da ist (verhindert Fehlermeldungen)
+        try {
+            java.nio.file.Files.createDirectories(fullPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+// 5. Den Dateinamen und den finalen Pfad festlegen
+        String docname = jahr + "-" + month + "-" + lastday + " " + employeeFolder + " Lohnabrechnung.pdf";
+        String docfile = fullPath.toString() + java.io.File.separator;
+
+        try {
+            // Hier wird jetzt der dynamische Pfad genutzt
             PdfWriter.getInstance(document, new FileOutputStream(docfile + docname));
             document.open();
 
+            // ... restlicher Code (Schriften, Tabellen etc.)
             // Schriftarten festlegen
-            BaseFont baseFont = BaseFont.createFont("C:/Windows/Fonts/calibri.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED);
+            byte[] fontBytes = getClass().getResourceAsStream("/calibri.ttf").readAllBytes();
+            BaseFont baseFont = BaseFont.createFont("calibri.ttf", BaseFont.WINANSI, BaseFont.EMBEDDED, BaseFont.CACHED, fontBytes, null);
             Font headlinefat = new Font(baseFont, 14, Font.BOLD, BaseColor.BLACK);
             Font headlinenormal = new Font(baseFont, 14, Font.NORMAL, BaseColor.BLACK);
             Font fat = new Font(baseFont, 10, Font.BOLD, BaseColor.BLACK);
@@ -310,10 +336,16 @@ public class PDFmtllohnabrechnung {
             kleingedrucktesTable.addCell(createCell("", small, Element.ALIGN_LEFT, 0, 5, 5, false));
             PdfPCell imageCell = new PdfPCell();
             imageCell.setBorder(Rectangle.NO_BORDER);
-            Image img = Image.getInstance("C:/Users/Anwender/IdeaProjects/demo3/src/main/resources/Logo1-removebg.png");
-            img.scaleToFit(30, 30);
-            img.setAlignment(Element.ALIGN_RIGHT);
-            imageCell.addElement(img);
+            java.net.URL logoUrl = getClass().getResource("/Logo1-removebg.png");
+
+            if (logoUrl != null) {
+                Image img = Image.getInstance(logoUrl);
+                img.scaleToFit(30, 30);
+                img.setAlignment(Element.ALIGN_RIGHT);
+                imageCell.addElement(img);
+            } else {
+                System.err.println("Logo konnte nicht gefunden werden! Pfad prüfen.");
+            }
             imageCell.setPaddingRight(6);
             kleingedrucktesTable.addCell(imageCell);
             kleingedrucktesTable.addCell(createCell("Dieses Dokument wurde von CashFlow generiert.", small, Element.ALIGN_LEFT, 0, 5, 5, false));
