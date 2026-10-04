@@ -82,11 +82,24 @@ jobs:
           name: CashFlow-${{ steps.version.outputs.version }}-windows
           path: dist/*
 
+      - name: Release notes from CHANGELOG.md
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: bash
+        run: |
+          version="${{ steps.version.outputs.version }}"
+          awk -v heading="## $version" 'index($0, heading) == 1 {found = 1; next} /^## / && found {exit} found {print}' CHANGELOG.md > release-notes.md
+          {
+            echo ""
+            echo "**Installation:** \`CashFlow-Setup.exe\` herunterladen und ausführen – keine Administratorrechte nötig."
+            echo "Ohne Installation: \`CashFlow-portable-windows-x64.zip\` entpacken und \`CashFlow.exe\` starten."
+          } >> release-notes.md
+          cat release-notes.md
+
       - uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           name: CashFlow ${{ steps.version.outputs.version }}
+          body_path: release-notes.md
           files: |
             dist/CashFlow-Setup.exe
             dist/CashFlow-portable-windows-x64.zip
-          generate_release_notes: true
