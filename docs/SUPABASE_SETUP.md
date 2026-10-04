@@ -66,7 +66,8 @@ where user_id = (select id from auth.users where email = 'name@beispiel.de');
 ## 6. Verbindungsdaten für CashFlow
 
 1. **Project Settings** → **Data API**: die **Project URL** kopieren
-   (sieht aus wie `https://abcdefghijklmnop.supabase.co`).
+   (sieht aus wie `https://abcdefghijklmnop.supabase.co`; die REST-Adresse mit `/rest/v1/` am Ende
+   funktioniert ebenfalls).
 2. **Project Settings** → **API Keys**: den **Publishable key** kopieren
    (beginnt mit `sb_publishable_`).
 

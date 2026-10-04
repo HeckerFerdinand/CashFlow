@@ -1,8 +1,12 @@
 name: CI
 
+# Pushes to master and pull requests (each change is tested once; a push to a
+# branch with an open pull request is covered by the pull_request event).
 on:
   push:
+    branches: [master]
   pull_request:
+  workflow_dispatch:
 
 jobs:
   test:

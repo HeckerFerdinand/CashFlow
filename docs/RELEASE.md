@@ -31,14 +31,15 @@ CashFlow wird für Windows als Installer gebaut – vollautomatisch auf GitHub.
    git push origin v2.0.1
    ```
 3. Der Workflow *Release* baut `CashFlow-Setup.exe` und eine portable ZIP-Datei und hängt beide an
-   das GitHub-Release (Dauer ca. 10–15 Minuten).
+   das GitHub-Release (Dauer ca. 15–20 Minuten).
 
 Der dauerhafte Download-Link für Anwender lautet danach immer:
 
 <https://github.com/HeckerFerdinand/CashFlow/releases/latest/download/CashFlow-Setup.exe>
 
-Probe-Build ohne Release: *Actions → Release → Run workflow*; die Dateien liegen dann als
-„Artifact“ am Workflow-Lauf.
+Probe-Builds ohne Release entstehen automatisch bei jedem Push auf `master` oder `rust-rewrite`
+(und per *Actions → Release → Run workflow*). Die Dateien liegen dann als „Artifact“ am
+Workflow-Lauf (*Actions → Release → Lauf öffnen → Artifacts*; Download mit GitHub-Anmeldung).
 
 ## Was der Installer macht
 

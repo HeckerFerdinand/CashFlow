@@ -3,11 +3,18 @@ name: Supabase keep-alive
 # Free Supabase projects pause after 7 days without activity. This calls the
 # harmless public.ping() function every three days. It only runs if the
 # repository variables SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY are set.
+#
+# GitHub disables scheduled workflows of public repositories after 60 days
+# without commits; the second step re-enables this workflow on every run so
+# the schedule keeps going even when nothing else changes in the repository.
 
 on:
   schedule:
     - cron: "17 6 */3 * *"
   workflow_dispatch:
+
+permissions:
+  actions: write
 
 jobs:
   ping:
@@ -18,3 +25,7 @@ jobs:
         run: |
           curl --fail --silent --show-error -X POST "${{ vars.SUPABASE_URL }}/rest/v1/rpc/ping" \
             -H "apikey: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}" -H "Content-Type: application/json" -d '{}'
+      - name: Keep this schedule enabled
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/keepalive.yml/enable"
