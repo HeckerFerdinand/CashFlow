@@ -1,0 +1,105 @@
+name: Release
+
+# Builds the Windows installer (CashFlow-Setup.exe) and a portable zip.
+#
+# - Push a tag "vX.Y.Z" (matching the version in Cargo.toml): the files are
+#   attached to a new GitHub release. The download link
+#   https://github.com/HeckerFerdinand/CashFlow/releases/latest/download/CashFlow-Setup.exe
+#   then always points to the newest installer.
+# - Push to master or rust-rewrite (code changes) or "Run workflow": test
+#   build, files only as workflow artifact (Actions → run → Artifacts).
+#
+# Repository variables SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY
+# (Settings → Secrets and variables → Actions → Variables) are built into the
+# app, so users only need to sign in. Without them, users enter the connection
+# once on the login screen.
+
+on:
+  push:
+    tags: ["v*"]
+    branches: [master, rust-rewrite]
+    paths:
+      - "crates/**"
+      - "assets/**"
+      - "packaging/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - ".github/workflows/release.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Read version
+        id: version
+        shell: bash
+        run: |
+          version=$(grep -m1 '^version' Cargo.toml | sed -E 's/.*"(.*)".*/\1/')
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if [[ "$GITHUB_REF_TYPE" == "tag" && "$GITHUB_REF_NAME" != "v$version" ]]; then
+            echo "::error::Tag $GITHUB_REF_NAME passt nicht zur Version $version in Cargo.toml"
+            exit 1
+          fi
+
+      - name: Build
+        env:
+          CASHFLOW_SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          CASHFLOW_SUPABASE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
+          # Static C runtime: no Visual C++ Redistributable needed on the target PC.
+          RUSTFLAGS: -C target-feature=+crt-static
+        run: cargo build --release --locked -p cashflow-app --target x86_64-pc-windows-msvc
+
+      - name: Installer (Inno Setup)
+        shell: pwsh
+        run: |
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) { choco install innosetup --no-progress -y }
+          & $iscc "/DAppVersion=${{ steps.version.outputs.version }}" packaging\windows\CashFlow.iss
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Portable zip
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force portable | Out-Null
+          Copy-Item target/x86_64-pc-windows-msvc/release/cashflow.exe portable/CashFlow.exe
+          Copy-Item CHANGELOG.md portable/Changelog.txt
+          Compress-Archive -Path portable/* -DestinationPath dist/CashFlow-portable-windows-x64.zip -Force
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CashFlow-${{ steps.version.outputs.version }}-windows
+          path: dist/*
+
+      - name: Release notes from CHANGELOG.md
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: bash
+        run: |
+          version="${{ steps.version.outputs.version }}"
+          awk -v heading="## $version" 'index($0, heading) == 1 {found = 1; next} /^## / && found {exit} found {print}' CHANGELOG.md > release-notes.md
+          {
+            echo ""
+            echo "**Installation:** \`CashFlow-Setup.exe\` herunterladen und ausführen – keine Administratorrechte nötig."
+            echo "Ohne Installation: \`CashFlow-portable-windows-x64.zip\` entpacken und \`CashFlow.exe\` starten."
+          } >> release-notes.md
+          cat release-notes.md
+
+      - uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          name: CashFlow ${{ steps.version.outputs.version }}
+          body_path: release-notes.md
+          files: |
+            dist/CashFlow-Setup.exe
+            dist/CashFlow-portable-windows-x64.zip

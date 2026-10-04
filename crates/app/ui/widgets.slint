@@ -1,0 +1,529 @@
+// Reusable building blocks. All sizes come from layouts (no absolute
+// positions), so every screen adapts to the window size.
+
+import { ScrollView } from "std-widgets.slint";
+import { Theme } from "theme.slint";
+import { FormField, FormSection, FieldKind, ListItem, KeyValueItem } from "state.slint";
+import { Icon, IconKind } from "icons.slint";
+import { CfLineEdit, CfComboBox } from "controls.slint";
+
+// White rounded panel with a soft shadow; children are stacked vertically.
+// `accent` draws a colored stripe on the left (like the old info boxes).
+export component Card inherits Rectangle {
+    in property <length> pad: 20px;
+    in property <length> gap: 12px;
+    in property <color> accent: transparent;
+    background: Theme.surface;
+    border-radius: Theme.radius;
+    border-width: 1px;
+    border-color: #e1e8e3;
+    drop-shadow-blur: 14px;
+    drop-shadow-offset-y: 3px;
+    drop-shadow-color: Theme.shadow;
+    clip: true;
+    if root.accent != transparent: Rectangle {
+        x: 0px;
+        width: 4px;
+        background: root.accent;
+        border-top-left-radius: Theme.radius;
+        border-bottom-left-radius: Theme.radius;
+    }
+    VerticalLayout {
+        padding: root.pad;
+        padding-left: root.pad + (root.accent != transparent ? 4px : 0px);
+        spacing: root.gap;
+        @children
+    }
+}
+
+export component Heading inherits Text {
+    font-size: Theme.font-heading;
+    font-weight: 700;
+    color: Theme.text;
+    wrap: word-wrap;
+}
+
+export component Muted inherits Text {
+    font-size: Theme.font-small;
+    color: Theme.text-muted;
+    wrap: word-wrap;
+}
+
+// Small upper-case label above titles ("LOHNBUCHHALTUNG").
+export component Overline inherits Text {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    color: Theme.brand;
+}
+
+// Page title with overline, subtitle and actions on the right.
+export component PageHeader inherits HorizontalLayout {
+    in property <string> overline;
+    in property <string> title;
+    in property <string> subtitle;
+    spacing: Theme.gap;
+    VerticalLayout {
+        alignment: center;
+        horizontal-stretch: 1;
+        spacing: 2px;
+        if root.overline != "": Overline {
+            text: root.overline;
+        }
+        Text {
+            text: root.title;
+            font-size: Theme.font-title;
+            font-weight: 700;
+            color: Theme.text;
+            wrap: word-wrap;
+        }
+        if root.subtitle != "": Text {
+            text: root.subtitle;
+            color: Theme.text-muted;
+            wrap: word-wrap;
+        }
+    }
+    @children
+}
+
+// One labelled input of a generic form.
+component FieldView inherits VerticalLayout {
+    in property <FormField> field;
+    callback edited(value: string);
+    spacing: 5px;
+    min-width: root.field.wide ? 300px : 180px;
+    preferred-width: root.field.wide ? 460px : 230px;
+    horizontal-stretch: root.field.wide ? 2 : 1;
+    alignment: start;
+    HorizontalLayout {
+        spacing: 3px;
+        alignment: start;
+        Text {
+            text: root.field.label;
+            font-size: Theme.font-small;
+            font-weight: 600;
+            color: Theme.text-muted;
+        }
+        if root.field.required: Text {
+            text: "*";
+            font-size: Theme.font-small;
+            font-weight: 700;
+            color: Theme.brand;
+        }
+    }
+    if root.field.kind == FieldKind.choice: CfComboBox {
+        model: root.field.choices;
+        current-index: root.field.choice-index;
+        enabled: !root.field.read-only;
+        selected(value) => {
+            root.edited(root.field.choice-values[self.current-index]);
+        }
+    }
+    if root.field.kind != FieldKind.choice: HorizontalLayout {
+        spacing: 8px;
+        CfLineEdit {
+            text: root.field.value;
+            placeholder-text: root.field.placeholder;
+            read-only: root.field.read-only;
+            has-error: root.field.error != "";
+            input-type: root.field.kind == FieldKind.password ? InputType.password : InputType.text;
+            horizontal-alignment: (root.field.kind == FieldKind.amount || root.field.kind == FieldKind.percent || root.field.kind == FieldKind.number) ? TextHorizontalAlignment.right : TextHorizontalAlignment.left;
+            edited(text) => {
+                root.edited(text);
+            }
+        }
+        if root.field.suffix != "": Text {
+            text: root.field.suffix;
+            vertical-alignment: center;
+            color: Theme.text-muted;
+            min-width: 30px;
+        }
+    }
+    if root.field.error != "": HorizontalLayout {
+        spacing: 5px;
+        Icon {
+            kind: IconKind.error;
+            size: 15px;
+            fill: Theme.error;
+        }
+        Text {
+            text: root.field.error;
+            color: Theme.error;
+            font-size: Theme.font-small;
+            wrap: word-wrap;
+            horizontal-stretch: 1;
+        }
+    }
+}
+
+// Section title with a short green bar in front.
+export component SectionTitle inherits HorizontalLayout {
+    in property <string> text;
+    spacing: 9px;
+    vertical-stretch: 0;
+    Rectangle {
+        width: 4px;
+        border-radius: 2px;
+        background: Theme.brand;
+    }
+    Heading {
+        text: root.text;
+    }
+}
+
+// A titled group of fields that wrap onto new lines when space runs out.
+export component SectionView inherits Card {
+    in property <FormSection> section;
+    callback edited(key: string, value: string);
+    if root.section.title != "": SectionTitle {
+        text: root.section.title;
+    }
+    if root.section.description != "": Muted {
+        text: root.section.description;
+    }
+    FlexboxLayout {
+        spacing-horizontal: 18px;
+        spacing-vertical: 14px;
+        alignment: stretch;
+        for field in root.section.fields: FieldView {
+            field: field;
+            edited(value) => {
+                root.edited(field.key, value);
+            }
+        }
+    }
+}
+
+export component FormView inherits VerticalLayout {
+    in property <[FormSection]> sections;
+    callback edited(key: string, value: string);
+    spacing: 16px;
+    for section in root.sections: SectionView {
+        section: section;
+        edited(key, value) => {
+            root.edited(key, value);
+        }
+    }
+}
+
+// Round avatar with initials.
+export component Avatar inherits Rectangle {
+    in property <string> initials;
+    in property <bool> muted;
+    in property <length> size: 36px;
+    width: root.size;
+    height: root.size;
+    border-radius: root.size / 2;
+    background: root.muted ? #e3e8e5 : Theme.brand-light;
+    Text {
+        text: root.initials;
+        color: root.muted ? Theme.text-muted : Theme.brand-dark;
+        font-weight: 700;
+        font-size: root.size * 0.38;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+    }
+}
+
+// Selectable row of a list.
+export component ListRow inherits Rectangle {
+    in property <ListItem> item;
+    in property <bool> selected;
+    callback clicked();
+    min-height: 56px;
+    border-radius: 8px;
+    background: root.selected ? Theme.brand-light : touch.has-hover ? Theme.surface-alt : transparent;
+    animate background { duration: 100ms; }
+    touch := TouchArea {
+        mouse-cursor: pointer;
+        clicked => {
+            root.clicked();
+        }
+    }
+    if root.selected: Rectangle {
+        x: 0px;
+        y: 10px;
+        width: 3px;
+        height: parent.height - 20px;
+        border-radius: 2px;
+        background: Theme.brand;
+    }
+    HorizontalLayout {
+        padding-left: 12px;
+        padding-right: 10px;
+        padding-top: 7px;
+        padding-bottom: 7px;
+        spacing: 10px;
+        if root.item.initials != "": VerticalLayout {
+            alignment: center;
+            Avatar {
+                initials: root.item.initials;
+                muted: root.item.muted;
+            }
+        }
+        VerticalLayout {
+            alignment: center;
+            horizontal-stretch: 1;
+            Text {
+                text: root.item.title;
+                color: root.item.muted ? Theme.text-muted : Theme.text;
+                font-weight: root.selected ? 700 : 600;
+                overflow: elide;
+            }
+            if root.item.subtitle != "": Text {
+                text: root.item.subtitle;
+                font-size: Theme.font-small;
+                color: Theme.text-muted;
+                overflow: elide;
+            }
+        }
+        if root.item.badge != "": VerticalLayout {
+            alignment: center;
+            Rectangle {
+                border-radius: 10px;
+                background: root.item.muted ? #eceff0 : Theme.lime-light;
+                height: 20px;
+                width: badge-text.preferred-width + 16px;
+                badge-text := Text {
+                    text: root.item.badge;
+                    font-size: 11.5px;
+                    font-weight: 600;
+                    color: root.item.muted ? Theme.text-muted : #5b7d10;
+                }
+            }
+        }
+    }
+}
+
+// Shown instead of content when there is nothing to display.
+export component EmptyState inherits VerticalLayout {
+    in property <string> title;
+    in property <string> text;
+    in property <IconKind> icon: IconKind.info;
+    alignment: center;
+    spacing: 8px;
+    padding: 32px;
+    HorizontalLayout {
+        alignment: center;
+        Rectangle {
+            width: 56px;
+            height: 56px;
+            border-radius: 28px;
+            background: Theme.brand-lighter;
+            Icon {
+                kind: root.icon;
+                size: 28px;
+                fill: Theme.brand;
+            }
+        }
+    }
+    Text {
+        text: root.title;
+        horizontal-alignment: center;
+        font-size: Theme.font-heading;
+        font-weight: 700;
+        color: Theme.text;
+        wrap: word-wrap;
+    }
+    Text {
+        text: root.text;
+        horizontal-alignment: center;
+        color: Theme.text-muted;
+        wrap: word-wrap;
+    }
+}
+
+// Inline message (hints, "already recorded").
+export component InfoBox inherits Rectangle {
+    in property <string> text;
+    in property <bool> warning;
+    border-radius: 8px;
+    background: root.warning ? Theme.warning-light : Theme.info-light;
+    clip: true;
+    Rectangle {
+        x: 0px;
+        width: 4px;
+        background: root.warning ? #f0a32a : #5a87d6;
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+    }
+    HorizontalLayout {
+        padding: 11px;
+        padding-left: 14px;
+        spacing: 9px;
+        VerticalLayout {
+            alignment: start;
+            Icon {
+                kind: IconKind.info;
+                size: 18px;
+                fill: root.warning ? #c47c09 : #3f6fc0;
+            }
+        }
+        Text {
+            text: root.text;
+            wrap: word-wrap;
+            color: Theme.text;
+            horizontal-stretch: 1;
+        }
+    }
+}
+
+// Red message box for validation and save errors.
+export component ErrorBox inherits Rectangle {
+    in property <string> text;
+    border-radius: 8px;
+    background: Theme.error-light;
+    clip: true;
+    Rectangle {
+        x: 0px;
+        width: 4px;
+        background: Theme.error;
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+    }
+    HorizontalLayout {
+        padding: 11px;
+        padding-left: 14px;
+        spacing: 9px;
+        VerticalLayout {
+            alignment: start;
+            Icon {
+                kind: IconKind.error;
+                size: 18px;
+                fill: Theme.error;
+            }
+        }
+        Text {
+            text: root.text;
+            color: Theme.error;
+            wrap: word-wrap;
+            horizontal-stretch: 1;
+        }
+    }
+}
+
+// Label / value pair in summaries.
+export component KeyValue inherits HorizontalLayout {
+    in property <string> key;
+    in property <string> value;
+    in property <bool> strong;
+    spacing: 12px;
+    Text {
+        text: root.key;
+        color: root.strong ? Theme.text : Theme.text-muted;
+        horizontal-stretch: 1;
+        wrap: word-wrap;
+        font-weight: root.strong ? 700 : 400;
+    }
+    Text {
+        text: root.value;
+        horizontal-alignment: right;
+        color: root.strong ? Theme.brand-dark : Theme.text;
+        font-weight: root.strong ? 700 : 400;
+    }
+}
+
+// Employee + month + year selection used by wage entry and time entry.
+export component SelectionBar inherits Card {
+    in property <[string]> employees;
+    in-out property <int> employee-index;
+    in property <[string]> months;
+    in-out property <int> month-index;
+    in property <[string]> years;
+    in-out property <int> year-index;
+    callback employee-changed(index: int);
+    callback period-changed(month-index: int, year-index: int);
+    pad: 16px;
+    FlexboxLayout {
+        spacing-horizontal: 18px;
+        spacing-vertical: 10px;
+        alignment: stretch;
+        VerticalLayout {
+            spacing: 5px;
+            min-width: 240px;
+            preferred-width: 380px;
+            horizontal-stretch: 2;
+            HorizontalLayout {
+                spacing: 6px;
+                Icon {
+                    kind: IconKind.person;
+                    size: 16px;
+                    fill: Theme.brand;
+                }
+                Muted {
+                    text: "Mitarbeiter";
+                    font-weight: 600;
+                }
+            }
+            CfComboBox {
+                model: root.employees;
+                current-index <=> root.employee-index;
+                selected => {
+                    root.employee-changed(self.current-index);
+                }
+            }
+        }
+        VerticalLayout {
+            spacing: 5px;
+            min-width: 240px;
+            preferred-width: 300px;
+            horizontal-stretch: 1;
+            HorizontalLayout {
+                spacing: 6px;
+                Icon {
+                    kind: IconKind.time;
+                    size: 16px;
+                    fill: Theme.brand;
+                }
+                Muted {
+                    text: "Monat";
+                    font-weight: 600;
+                }
+            }
+            HorizontalLayout {
+                spacing: 8px;
+                CfComboBox {
+                    model: root.months;
+                    current-index <=> root.month-index;
+                    horizontal-stretch: 2;
+                    selected => {
+                        root.period-changed(self.current-index, root.year-index);
+                    }
+                }
+                CfComboBox {
+                    model: root.years;
+                    current-index <=> root.year-index;
+                    horizontal-stretch: 1;
+                    selected => {
+                        root.period-changed(root.month-index, self.current-index);
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Card with a heading and label/value lines; strong lines are highlighted.
+export component SummaryCard inherits Card {
+    in property <string> title;
+    in property <[KeyValueItem]> lines;
+    gap: 8px;
+    SectionTitle {
+        text: root.title;
+    }
+    for line in root.lines: Rectangle {
+        border-radius: 6px;
+        background: line.strong ? Theme.brand-lighter : transparent;
+        HorizontalLayout {
+            padding-left: line.strong ? 8px : 0px;
+            padding-right: line.strong ? 8px : 0px;
+            padding-top: line.strong ? 5px : 0px;
+            padding-bottom: line.strong ? 5px : 0px;
+            KeyValue {
+                key: line.key;
+                value: line.value;
+                strong: line.strong;
+            }
+        }
+    }
+}

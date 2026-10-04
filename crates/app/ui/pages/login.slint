@@ -1,0 +1,222 @@
+import { Theme } from "../theme.slint";
+import { Muted } from "../widgets.slint";
+import { Icon, IconKind } from "../icons.slint";
+import { CfLineEdit, CfButton, ButtonKind, CfCheckBox } from "../controls.slint";
+
+export global LoginPage {
+    in-out property <string> email;
+    in-out property <string> password;
+    in-out property <bool> remember: true;
+    in property <string> error;
+    in property <bool> working;
+    // Connection to the Supabase project (needed once per computer).
+    in-out property <bool> show-connection;
+    in-out property <string> url;
+    in-out property <string> api-key;
+    callback sign-in();
+    callback save-connection();
+}
+
+component FieldLabel inherits Text {
+    font-size: Theme.font-small;
+    font-weight: 600;
+    color: Theme.text-muted;
+}
+
+export component LoginView inherits Rectangle {
+    background: Theme.background;
+    // Wave background of the old start screen, slightly tinted green.
+    Image {
+        source: @image-url("../../../../assets/background.jpg");
+        width: parent.width;
+        height: parent.height;
+        image-fit: cover;
+        opacity: 0.9;
+    }
+    Rectangle {
+        background: @linear-gradient(180deg, #267f3f14 0%, #19552a2e 100%);
+    }
+    VerticalLayout {
+        alignment: center;
+        padding: 24px;
+        HorizontalLayout {
+            alignment: center;
+            Rectangle {
+                width: min(440px, root.width - 48px);
+                background: Theme.surface;
+                border-radius: 14px;
+                drop-shadow-blur: 36px;
+                drop-shadow-offset-y: 10px;
+                drop-shadow-color: #12401f40;
+                clip: true;
+                VerticalLayout {
+                    // Green title bar
+                    Rectangle {
+                        background: Theme.brand-gradient;
+                        border-top-left-radius: 14px;
+                        border-top-right-radius: 14px;
+                        HorizontalLayout {
+                            padding: 22px;
+                            padding-left: 26px;
+                            spacing: 16px;
+                            Rectangle {
+                                width: 58px;
+                                height: 58px;
+                                border-radius: 14px;
+                                background: white;
+                                border-width: 1px;
+                                border-color: #ffffff80;
+                                Image {
+                                    source: @image-url("../../../../assets/logo.png");
+                                    width: 44px;
+                                    height: 44px;
+                                    image-fit: contain;
+                                }
+                            }
+                            VerticalLayout {
+                                alignment: center;
+                                Text {
+                                    text: "CashFlow";
+                                    font-size: 32px;
+                                    font-weight: 700;
+                                    color: white;
+                                }
+                                Text {
+                                    text: "Lohnabrechnung für Minijobs";
+                                    font-size: 14px;
+                                    color: #ffffffcc;
+                                }
+                            }
+                        }
+                    }
+                    VerticalLayout {
+                        padding: 26px;
+                        padding-top: 22px;
+                        spacing: 8px;
+                        FieldLabel {
+                            text: "E-Mail-Adresse";
+                        }
+                        email-input := CfLineEdit {
+                            text <=> LoginPage.email;
+                            placeholder-text: "name@beispiel.de";
+                            enabled: !LoginPage.working;
+                            accepted => {
+                                password-input.focus-input();
+                            }
+                        }
+                        Rectangle {
+                            height: 4px;
+                        }
+                        FieldLabel {
+                            text: "Passwort";
+                        }
+                        password-input := CfLineEdit {
+                            text <=> LoginPage.password;
+                            input-type: password;
+                            enabled: !LoginPage.working;
+                            accepted => {
+                                LoginPage.sign-in();
+                            }
+                        }
+                        Rectangle {
+                            height: 4px;
+                        }
+                        CfCheckBox {
+                            text: "Angemeldet bleiben";
+                            checked <=> LoginPage.remember;
+                            enabled: !LoginPage.working;
+                        }
+                        if LoginPage.error != "": Rectangle {
+                            border-radius: 8px;
+                            background: Theme.error-light;
+                            HorizontalLayout {
+                                padding: 10px;
+                                spacing: 8px;
+                                VerticalLayout {
+                                    alignment: start;
+                                    Icon {
+                                        kind: IconKind.error;
+                                        size: 18px;
+                                        fill: Theme.error;
+                                    }
+                                }
+                                Text {
+                                    text: LoginPage.error;
+                                    color: Theme.error;
+                                    wrap: word-wrap;
+                                    horizontal-stretch: 1;
+                                }
+                            }
+                        }
+                        Rectangle {
+                            height: 6px;
+                        }
+                        CfButton {
+                            text: LoginPage.working ? "Anmelden …" : "Anmelden";
+                            kind: ButtonKind.primary;
+                            enabled: !LoginPage.working;
+                            horizontal-stretch: 1;
+                            clicked => {
+                                LoginPage.sign-in();
+                            }
+                        }
+                        Rectangle {
+                            height: 6px;
+                        }
+                        TouchArea {
+                            height: 24px;
+                            mouse-cursor: pointer;
+                            clicked => {
+                                LoginPage.show-connection = !LoginPage.show-connection;
+                            }
+                            HorizontalLayout {
+                                spacing: 4px;
+                                Icon {
+                                    kind: LoginPage.show-connection ? IconKind.chevron-down : IconKind.chevron-right;
+                                    size: 18px;
+                                    fill: Theme.brand;
+                                }
+                                Text {
+                                    text: "Verbindung zur Datenbank";
+                                    color: Theme.brand-dark;
+                                    font-weight: 600;
+                                    vertical-alignment: center;
+                                }
+                                Rectangle { }
+                            }
+                        }
+                        if LoginPage.show-connection: Rectangle {
+                            border-radius: 10px;
+                            background: Theme.surface-alt;
+                            border-width: 1px;
+                            border-color: Theme.border;
+                            VerticalLayout {
+                                padding: 14px;
+                                spacing: 8px;
+                                Muted {
+                                    text: "Projekt-URL und „Publishable key“ aus dem Supabase-Dashboard (Project Settings → Data API / API Keys).";
+                                }
+                                CfLineEdit {
+                                    text <=> LoginPage.url;
+                                    placeholder-text: "https://xxxx.supabase.co";
+                                }
+                                CfLineEdit {
+                                    text <=> LoginPage.api-key;
+                                    placeholder-text: "sb_publishable_…";
+                                }
+                                CfButton {
+                                    text: "Verbindung speichern";
+                                    icon: IconKind.save;
+                                    horizontal-stretch: 1;
+                                    clicked => {
+                                        LoginPage.save-connection();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

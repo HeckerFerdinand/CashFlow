@@ -1,0 +1,211 @@
+import { ScrollView } from "std-widgets.slint";
+import { Theme } from "../theme.slint";
+import { FormSection } from "../state.slint";
+import { Card, PageHeader, Heading, Muted, SectionView, SectionTitle } from "../widgets.slint";
+import { Icon, IconKind } from "../icons.slint";
+import { CfButton, ButtonKind, CfLineEdit, CfSwitch } from "../controls.slint";
+
+export global SettingsPage {
+    // This computer
+    in property <string> pdf-folder;
+    in-out property <bool> open-after-create;
+    in-out property <bool> check-updates;
+    // Shared defaults (database)
+    in property <FormSection> defaults;
+    in property <string> defaults-error;
+    // Account
+    in property <string> email;
+    in-out property <string> new-password;
+    in-out property <string> repeat-password;
+    in property <string> password-error;
+    // Connection
+    in property <string> connection-url;
+    in property <string> log-file;
+    callback change-folder();
+    callback open-folder();
+    callback local-changed();
+    callback defaults-edited(key: string, value: string);
+    callback save-defaults();
+    callback change-password();
+    callback change-connection();
+    callback open-log();
+}
+
+component ErrorText inherits Text {
+    color: Theme.error;
+    wrap: word-wrap;
+    font-size: Theme.font-small;
+}
+
+component IconLine inherits HorizontalLayout {
+    in property <IconKind> icon;
+    in property <string> text;
+    spacing: 10px;
+    VerticalLayout {
+        alignment: center;
+        Icon {
+            kind: root.icon;
+            size: 18px;
+            fill: Theme.brand;
+        }
+    }
+    Text {
+        text: root.text;
+        color: Theme.text;
+        wrap: word-wrap;
+        vertical-alignment: center;
+        horizontal-stretch: 1;
+    }
+}
+
+export component SettingsView inherits Rectangle {
+    ScrollView {
+        VerticalLayout {
+            width: parent.visible-width;
+            padding: Theme.page-padding;
+            spacing: 18px;
+            alignment: start;
+            PageHeader {
+                overline: "PROGRAMM";
+                title: "Einstellungen";
+            }
+            FlexboxLayout {
+                spacing: 16px;
+                alignment: stretch;
+                cross-axis-alignment: stretch;
+                Card {
+                    min-width: 300px;
+                    preferred-width: 440px;
+                    horizontal-stretch: 1;
+                    SectionTitle {
+                        text: "Dieser Computer";
+                    }
+                    Muted {
+                        text: "Ablageordner für PDFs (z. B. ein Netzlaufwerk):";
+                    }
+                    IconLine {
+                        icon: IconKind.folder;
+                        text: SettingsPage.pdf-folder;
+                    }
+                    FlexboxLayout {
+                        spacing: 10px;
+                        CfButton {
+                            text: "Ordner ändern …";
+                            clicked => {
+                                SettingsPage.change-folder();
+                            }
+                        }
+                        CfButton {
+                            text: "Ordner öffnen";
+                            icon: IconKind.folder;
+                            clicked => {
+                                SettingsPage.open-folder();
+                            }
+                        }
+                    }
+                    CfSwitch {
+                        text: "PDF nach dem Erstellen öffnen";
+                        checked <=> SettingsPage.open-after-create;
+                        toggled => {
+                            SettingsPage.local-changed();
+                        }
+                    }
+                    CfSwitch {
+                        text: "Beim Start nach Updates suchen";
+                        checked <=> SettingsPage.check-updates;
+                        toggled => {
+                            SettingsPage.local-changed();
+                        }
+                    }
+                }
+                Card {
+                    min-width: 300px;
+                    preferred-width: 440px;
+                    horizontal-stretch: 1;
+                    SectionTitle {
+                        text: "Benutzerkonto";
+                    }
+                    IconLine {
+                        icon: IconKind.person;
+                        text: "Angemeldet als " + SettingsPage.email;
+                    }
+                    Muted {
+                        text: "Neues Passwort (mindestens 8 Zeichen):";
+                    }
+                    CfLineEdit {
+                        text <=> SettingsPage.new-password;
+                        input-type: password;
+                        placeholder-text: "Neues Passwort";
+                    }
+                    CfLineEdit {
+                        text <=> SettingsPage.repeat-password;
+                        input-type: password;
+                        placeholder-text: "Wiederholen";
+                        has-error: SettingsPage.password-error != "";
+                    }
+                    if SettingsPage.password-error != "": ErrorText {
+                        text: SettingsPage.password-error;
+                    }
+                    HorizontalLayout {
+                        alignment: start;
+                        CfButton {
+                            text: "Passwort ändern";
+                            clicked => {
+                                SettingsPage.change-password();
+                            }
+                        }
+                    }
+                }
+            }
+            SectionView {
+                section: SettingsPage.defaults;
+                edited(key, value) => {
+                    SettingsPage.defaults-edited(key, value);
+                }
+                if SettingsPage.defaults-error != "": ErrorText {
+                    text: SettingsPage.defaults-error;
+                }
+                HorizontalLayout {
+                    alignment: end;
+                    CfButton {
+                        text: "Standardwerte speichern";
+                        icon: IconKind.save;
+                        kind: ButtonKind.primary;
+                        clicked => {
+                            SettingsPage.save-defaults();
+                        }
+                    }
+                }
+            }
+            Card {
+                accent: Theme.lime;
+                SectionTitle {
+                    text: "Datenbank";
+                }
+                IconLine {
+                    icon: IconKind.employers;
+                    text: SettingsPage.connection-url == "" ? "Keine Verbindung eingerichtet" : "Verbunden mit " + SettingsPage.connection-url;
+                }
+                Muted {
+                    text: "Protokolldatei: " + SettingsPage.log-file;
+                }
+                FlexboxLayout {
+                    spacing: 10px;
+                    CfButton {
+                        text: "Verbindung ändern …";
+                        clicked => {
+                            SettingsPage.change-connection();
+                        }
+                    }
+                    CfButton {
+                        text: "Protokoll öffnen";
+                        icon: IconKind.documents;
+                        clicked => {
+                            SettingsPage.open-log();
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

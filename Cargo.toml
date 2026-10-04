@@ -1,0 +1,40 @@
+[workspace]
+resolver = "3"
+members = ["crates/*"]
+
+[workspace.package]
+version = "2.0.0"
+edition = "2024"
+rust-version = "1.88"
+authors = ["Ferdinand Hecker"]
+publish = false
+
+[workspace.dependencies]
+cashflow-core = { path = "crates/core" }
+cashflow-data = { path = "crates/data" }
+cashflow-documents = { path = "crates/documents" }
+
+chrono = { version = "0.4", default-features = false, features = ["std", "clock", "serde"] }
+rust_decimal = { version = "1.43", features = ["serde-with-arbitrary-precision"] }
+rust_decimal_macros = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["arbitrary_precision"] }
+thiserror = "2"
+uuid = { version = "1", features = ["serde", "v4"] }
+reqwest = { version = "0.13", default-features = false, features = ["json", "query", "rustls", "http2"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "time", "sync"] }
+typst = "0.15"
+typst-pdf = "0.15"
+slint = "1.18"
+slint-build = "1.18"
+tracing = "0.1"
+
+[profile.dev.package."*"]
+# Dependencies (typst, slint, ...) are compiled with optimizations so the
+# debug build stays responsive; our own crates keep fast incremental builds.
+opt-level = 2
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = true

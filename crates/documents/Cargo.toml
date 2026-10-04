@@ -1,0 +1,22 @@
+[package]
+name = "cashflow-documents"
+description = "PDF documents (payslip, yearly journals) rendered with Typst"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[dependencies]
+cashflow-core.workspace = true
+chrono.workspace = true
+rust_decimal.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+typst.workspace = true
+typst-layout = "0.15"
+typst-pdf.workspace = true
+
+[dev-dependencies]
+rust_decimal_macros.workspace = true
+uuid.workspace = true

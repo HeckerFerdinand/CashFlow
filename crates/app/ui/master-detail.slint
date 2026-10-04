@@ -1,0 +1,193 @@
+// List on the left, form on the right. On narrow windows only one of the
+// two is shown at a time.
+
+import { ListView, ScrollView } from "std-widgets.slint";
+import { Theme } from "theme.slint";
+import { ListItem, FormSection } from "state.slint";
+import { Card, FormView, ListRow, EmptyState, Heading, Overline, ErrorBox } from "widgets.slint";
+import { Icon, IconKind } from "icons.slint";
+import { CfButton, ButtonKind, CfLineEdit, CfCheckBox } from "controls.slint";
+
+export component MasterDetail inherits Rectangle {
+    in property <string> overline;
+    in property <string> list-title;
+    in property <IconKind> list-icon;
+    in property <string> empty-list-text;
+    in property <string> nothing-selected-text;
+    in property <string> filter-label;
+    in-out property <bool> filter-checked;
+    in property <[ListItem]> items;
+    in property <string> selected-id;
+    in property <bool> editing;
+    in property <bool> is-new;
+    in property <string> title;
+    in property <[FormSection]> form;
+    in property <string> error;
+    callback select(id: string);
+    callback create();
+    callback edited(key: string, value: string);
+    callback save();
+    callback discard();
+    callback delete();
+    callback search(text: string);
+    callback filter-toggled(checked: bool);
+
+    property <bool> narrow: root.width < 820px;
+
+    HorizontalLayout {
+        padding: Theme.page-padding;
+        spacing: 18px;
+        if !root.narrow || !root.editing: Card {
+            horizontal-stretch: root.narrow ? 1 : 0;
+            min-width: 250px;
+            preferred-width: 320px;
+            max-width: root.narrow ? 10000px : 340px;
+            pad: 14px;
+            gap: 10px;
+            HorizontalLayout {
+                spacing: 8px;
+                VerticalLayout {
+                    alignment: center;
+                    horizontal-stretch: 1;
+                    Overline {
+                        text: root.overline;
+                    }
+                    Heading {
+                        text: root.list-title;
+                    }
+                }
+                VerticalLayout {
+                    alignment: center;
+                    CfButton {
+                        text: "Neu";
+                        icon: IconKind.plus;
+                        kind: ButtonKind.primary;
+                        compact: true;
+                        clicked => {
+                            root.create();
+                        }
+                    }
+                }
+            }
+            CfLineEdit {
+                placeholder-text: "Suchen …";
+                icon: IconKind.search;
+                edited(text) => {
+                    root.search(text);
+                }
+            }
+            if root.filter-label != "": CfCheckBox {
+                text: root.filter-label;
+                checked <=> root.filter-checked;
+                toggled => {
+                    root.filter-toggled(self.checked);
+                }
+            }
+            if root.items.length == 0: EmptyState {
+                title: "Keine Einträge";
+                text: root.empty-list-text;
+                icon: root.list-icon;
+                vertical-stretch: 1;
+            }
+            if root.items.length > 0: ListView {
+                vertical-stretch: 1;
+                for item in root.items: ListRow {
+                    item: item;
+                    selected: item.id == root.selected-id;
+                    clicked => {
+                        root.select(item.id);
+                    }
+                }
+            }
+        }
+        if !root.narrow || root.editing: VerticalLayout {
+            horizontal-stretch: 1;
+            spacing: 14px;
+            if !root.editing: Card {
+                vertical-stretch: 1;
+                EmptyState {
+                    title: "Nichts ausgewählt";
+                    text: root.nothing-selected-text;
+                    icon: root.list-icon;
+                }
+            }
+            if root.editing: HorizontalLayout {
+                spacing: 10px;
+                if root.narrow: VerticalLayout {
+                    alignment: center;
+                    CfButton {
+                        text: "Liste";
+                        icon: IconKind.chevron-left;
+                        compact: true;
+                        clicked => {
+                            root.discard();
+                        }
+                    }
+                }
+                VerticalLayout {
+                    alignment: center;
+                    horizontal-stretch: 1;
+                    Overline {
+                        text: root.is-new ? "NEU ANLEGEN" : "BEARBEITEN";
+                    }
+                    Text {
+                        text: root.title;
+                        font-size: Theme.font-title;
+                        font-weight: 700;
+                        color: Theme.text;
+                        overflow: elide;
+                    }
+                }
+                if !root.is-new: VerticalLayout {
+                    alignment: center;
+                    CfButton {
+                        text: "Löschen";
+                        icon: IconKind.delete;
+                        kind: ButtonKind.danger;
+                        clicked => {
+                            root.delete();
+                        }
+                    }
+                }
+                VerticalLayout {
+                    alignment: center;
+                    CfButton {
+                        text: "Verwerfen";
+                        clicked => {
+                            root.discard();
+                        }
+                    }
+                }
+                VerticalLayout {
+                    alignment: center;
+                    CfButton {
+                        text: "Speichern";
+                        icon: IconKind.save;
+                        kind: ButtonKind.primary;
+                        clicked => {
+                            root.save();
+                        }
+                    }
+                }
+            }
+            if root.editing && root.error != "": ErrorBox {
+                text: root.error;
+            }
+            if root.editing: ScrollView {
+                vertical-stretch: 1;
+                VerticalLayout {
+                    width: parent.visible-width;
+                    padding: 4px;
+                    padding-right: 8px;
+                    padding-bottom: 12px;
+                    FormView {
+                        sections: root.form;
+                        edited(key, value) => {
+                            root.edited(key, value);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,63 @@
+import { ListItem, FormSection } from "../state.slint";
+import { MasterDetail } from "../master-detail.slint";
+import { IconKind } from "../icons.slint";
+
+export global EmployeesPage {
+    in property <[ListItem]> items;
+    in property <string> selected-id;
+    in property <bool> editing;
+    in property <bool> is-new;
+    in property <string> title;
+    in property <[FormSection]> form;
+    in property <string> error;
+    in-out property <bool> show-former;
+    callback select(id: string);
+    callback create();
+    callback edited(key: string, value: string);
+    callback save();
+    callback discard();
+    callback delete();
+    callback search(text: string);
+    callback show-former-changed(show: bool);
+}
+
+export component EmployeesView inherits MasterDetail {
+    overline: "STAMMDATEN";
+    list-title: "Mitarbeiter";
+    list-icon: IconKind.employees;
+    empty-list-text: "Lege mit „Neu“ den ersten Mitarbeiter an. Vorher muss ein Arbeitgeber angelegt sein.";
+    nothing-selected-text: "Wähle links einen Mitarbeiter aus oder lege einen neuen an.";
+    filter-label: "Ausgeschiedene anzeigen";
+    filter-checked <=> EmployeesPage.show-former;
+    items: EmployeesPage.items;
+    selected-id: EmployeesPage.selected-id;
+    editing: EmployeesPage.editing;
+    is-new: EmployeesPage.is-new;
+    title: EmployeesPage.title;
+    form: EmployeesPage.form;
+    error: EmployeesPage.error;
+    select(id) => {
+        EmployeesPage.select(id);
+    }
+    create => {
+        EmployeesPage.create();
+    }
+    edited(key, value) => {
+        EmployeesPage.edited(key, value);
+    }
+    save => {
+        EmployeesPage.save();
+    }
+    discard => {
+        EmployeesPage.discard();
+    }
+    delete => {
+        EmployeesPage.delete();
+    }
+    search(text) => {
+        EmployeesPage.search(text);
+    }
+    filter-toggled(checked) => {
+        EmployeesPage.show-former-changed(checked);
+    }
+}

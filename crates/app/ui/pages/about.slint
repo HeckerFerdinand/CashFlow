@@ -1,0 +1,164 @@
+import { ScrollView, AboutSlint } from "std-widgets.slint";
+import { Theme } from "../theme.slint";
+import { AppState } from "../state.slint";
+import { Card, Heading, Muted, SectionTitle } from "../widgets.slint";
+import { Icon, IconKind } from "../icons.slint";
+import { CfButton, ButtonKind } from "../controls.slint";
+
+export global AboutPage {
+    in property <string> imprint;
+    in property <string> disclaimer;
+    in property <string> changelog;
+    in property <string> licenses;
+    in property <string> update-text;
+    in property <bool> update-available;
+    callback check-updates();
+    callback open-download();
+}
+
+export component AboutView inherits Rectangle {
+    ScrollView {
+        VerticalLayout {
+            width: parent.visible-width;
+            padding: Theme.page-padding;
+            spacing: 18px;
+            alignment: start;
+            // Header band like the old start screen
+            Rectangle {
+                border-radius: 14px;
+                background: Theme.brand-gradient;
+                drop-shadow-blur: 18px;
+                drop-shadow-offset-y: 4px;
+                drop-shadow-color: #19552a4d;
+                clip: true;
+                Rectangle {
+                    x: parent.width - 190px;
+                    y: -70px;
+                    width: 260px;
+                    height: 260px;
+                    border-radius: 130px;
+                    background: #ffffff12;
+                }
+                HorizontalLayout {
+                    padding: 24px;
+                    spacing: 20px;
+                    Rectangle {
+                        width: 84px;
+                        height: 84px;
+                        border-radius: 20px;
+                        background: white;
+                        border-width: 1px;
+                        border-color: #ffffff80;
+                        Image {
+                            source: @image-url("../../../../assets/logo.png");
+                            width: 62px;
+                            height: 62px;
+                            image-fit: contain;
+                        }
+                    }
+                    VerticalLayout {
+                        alignment: center;
+                        horizontal-stretch: 1;
+                        spacing: 4px;
+                        Text {
+                            text: "CashFlow";
+                            font-size: 34px;
+                            font-weight: 700;
+                            color: white;
+                        }
+                        Text {
+                            text: "Version " + AppState.version + " · Lohnabrechnung für Minijobs";
+                            color: #ffffffd9;
+                            wrap: word-wrap;
+                        }
+                        if AboutPage.update-text != "": Text {
+                            text: AboutPage.update-text;
+                            color: white;
+                            font-weight: AboutPage.update-available ? 700 : 400;
+                            wrap: word-wrap;
+                        }
+                    }
+                    VerticalLayout {
+                        alignment: center;
+                        spacing: 8px;
+                        CfButton {
+                            text: "Nach Updates suchen";
+                            icon: IconKind.refresh;
+                            kind: ButtonKind.light;
+                            clicked => {
+                                AboutPage.check-updates();
+                            }
+                        }
+                        if AboutPage.update-available: CfButton {
+                            text: "Download öffnen";
+                            kind: ButtonKind.light;
+                            clicked => {
+                                AboutPage.open-download();
+                            }
+                        }
+                    }
+                }
+            }
+            FlexboxLayout {
+                spacing: 16px;
+                alignment: stretch;
+                cross-axis-alignment: stretch;
+                Card {
+                    min-width: 280px;
+                    preferred-width: 380px;
+                    horizontal-stretch: 1;
+                    accent: Theme.lime;
+                    SectionTitle {
+                        text: "Impressum";
+                    }
+                    Text {
+                        text: AboutPage.imprint;
+                        color: Theme.text;
+                        wrap: word-wrap;
+                    }
+                    Rectangle {
+                        vertical-stretch: 1;
+                    }
+                }
+                Card {
+                    min-width: 280px;
+                    preferred-width: 380px;
+                    horizontal-stretch: 1;
+                    SectionTitle {
+                        text: "Änderungsprotokoll";
+                    }
+                    Text {
+                        text: AboutPage.changelog;
+                        color: Theme.text;
+                        wrap: word-wrap;
+                    }
+                    Rectangle {
+                        vertical-stretch: 1;
+                    }
+                }
+            }
+            Card {
+                SectionTitle {
+                    text: "Haftungsausschluss";
+                }
+                Muted {
+                    text: AboutPage.disclaimer;
+                }
+            }
+            Card {
+                SectionTitle {
+                    text: "Lizenzen";
+                }
+                Muted {
+                    text: AboutPage.licenses;
+                }
+                HorizontalLayout {
+                    alignment: start;
+                    AboutSlint {
+                        max-height: 180px;
+                    }
+                }
+            }
+        }
+    }
+}

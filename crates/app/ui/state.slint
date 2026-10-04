@@ -1,0 +1,83 @@
+// Shared state between the pages and the Rust side.
+
+export enum Page { overview, employees, employers, payroll, time, documents, settings, about }
+
+export enum NoticeKind { info, success, error }
+
+export struct Notice {
+    id: int,
+    kind: NoticeKind,
+    text: string,
+}
+
+// One row of a selectable list (employees, employers).
+export struct ListItem {
+    id: string,
+    title: string,
+    subtitle: string,
+    badge: string,
+    muted: bool,
+    // Up to two letters shown in the round avatar.
+    initials: string,
+}
+
+export enum FieldKind { text, choice, date, amount, percent, number, password }
+
+// One input of a generic form. `value` is the raw text; `error` is shown below it.
+export struct FormField {
+    key: string,
+    label: string,
+    value: string,
+    error: string,
+    kind: FieldKind,
+    choices: [string],
+    choice-values: [string],
+    choice-index: int,
+    placeholder: string,
+    suffix: string,
+    required: bool,
+    wide: bool,
+    read-only: bool,
+}
+
+export struct FormSection {
+    title: string,
+    description: string,
+    fields: [FormField],
+}
+
+export global Nav {
+    in-out property <Page> page: Page.overview;
+    callback navigate(Page);
+}
+
+export global AppState {
+    in property <bool> signed-in;
+    in property <string> user-email;
+    in property <bool> busy;
+    in property <string> busy-text;
+    in property <string> version;
+    callback sign-out();
+}
+
+export global Notices {
+    in property <[Notice]> items;
+    callback dismiss(int);
+}
+
+export global Confirm {
+    in property <bool> open;
+    in property <string> title;
+    in property <string> message;
+    in property <string> confirm-label: "OK";
+    in property <bool> destructive;
+    callback accepted();
+    callback rejected();
+}
+
+// Label/value line in summaries ("Gesamt-Brutto  578,50 €").
+export struct KeyValueItem {
+    key: string,
+    value: string,
+    strong: bool,
+}
