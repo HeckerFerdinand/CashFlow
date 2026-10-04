@@ -1,7 +1,9 @@
-import { Button, LineEdit, Switch, ScrollView } from "std-widgets.slint";
+import { ScrollView } from "std-widgets.slint";
 import { Theme } from "../theme.slint";
 import { FormSection } from "../state.slint";
-import { Card, PageHeader, Heading, Muted, SectionView } from "../widgets.slint";
+import { Card, PageHeader, Heading, Muted, SectionView, SectionTitle } from "../widgets.slint";
+import { Icon, IconKind } from "../icons.slint";
+import { CfButton, ButtonKind, CfLineEdit, CfSwitch } from "../controls.slint";
 
 export global SettingsPage {
     // This computer
@@ -35,14 +37,36 @@ component ErrorText inherits Text {
     font-size: Theme.font-small;
 }
 
+component IconLine inherits HorizontalLayout {
+    in property <IconKind> icon;
+    in property <string> text;
+    spacing: 10px;
+    VerticalLayout {
+        alignment: center;
+        Icon {
+            kind: root.icon;
+            size: 18px;
+            fill: Theme.brand;
+        }
+    }
+    Text {
+        text: root.text;
+        color: Theme.text;
+        wrap: word-wrap;
+        vertical-alignment: center;
+        horizontal-stretch: 1;
+    }
+}
+
 export component SettingsView inherits Rectangle {
     ScrollView {
         VerticalLayout {
             width: parent.visible-width;
             padding: Theme.page-padding;
-            spacing: 16px;
+            spacing: 18px;
             alignment: start;
             PageHeader {
+                overline: "PROGRAMM";
                 title: "Einstellungen";
             }
             FlexboxLayout {
@@ -51,42 +75,42 @@ export component SettingsView inherits Rectangle {
                 cross-axis-alignment: stretch;
                 Card {
                     min-width: 300px;
-                    preferred-width: 420px;
+                    preferred-width: 440px;
                     horizontal-stretch: 1;
-                    Heading {
+                    SectionTitle {
                         text: "Dieser Computer";
                     }
                     Muted {
                         text: "Ablageordner für PDFs (z. B. ein Netzlaufwerk):";
                     }
-                    Text {
+                    IconLine {
+                        icon: IconKind.folder;
                         text: SettingsPage.pdf-folder;
-                        color: Theme.text;
-                        wrap: word-wrap;
                     }
                     FlexboxLayout {
-                        spacing: 8px;
-                        Button {
+                        spacing: 10px;
+                        CfButton {
                             text: "Ordner ändern …";
                             clicked => {
                                 SettingsPage.change-folder();
                             }
                         }
-                        Button {
+                        CfButton {
                             text: "Ordner öffnen";
+                            icon: IconKind.folder;
                             clicked => {
                                 SettingsPage.open-folder();
                             }
                         }
                     }
-                    Switch {
+                    CfSwitch {
                         text: "PDF nach dem Erstellen öffnen";
                         checked <=> SettingsPage.open-after-create;
                         toggled => {
                             SettingsPage.local-changed();
                         }
                     }
-                    Switch {
+                    CfSwitch {
                         text: "Beim Start nach Updates suchen";
                         checked <=> SettingsPage.check-updates;
                         toggled => {
@@ -96,33 +120,35 @@ export component SettingsView inherits Rectangle {
                 }
                 Card {
                     min-width: 300px;
-                    preferred-width: 420px;
+                    preferred-width: 440px;
                     horizontal-stretch: 1;
-                    Heading {
+                    SectionTitle {
                         text: "Benutzerkonto";
                     }
-                    Muted {
+                    IconLine {
+                        icon: IconKind.person;
                         text: "Angemeldet als " + SettingsPage.email;
                     }
                     Muted {
                         text: "Neues Passwort (mindestens 8 Zeichen):";
                     }
-                    LineEdit {
+                    CfLineEdit {
                         text <=> SettingsPage.new-password;
                         input-type: password;
                         placeholder-text: "Neues Passwort";
                     }
-                    LineEdit {
+                    CfLineEdit {
                         text <=> SettingsPage.repeat-password;
                         input-type: password;
                         placeholder-text: "Wiederholen";
+                        has-error: SettingsPage.password-error != "";
                     }
                     if SettingsPage.password-error != "": ErrorText {
                         text: SettingsPage.password-error;
                     }
                     HorizontalLayout {
                         alignment: start;
-                        Button {
+                        CfButton {
                             text: "Passwort ändern";
                             clicked => {
                                 SettingsPage.change-password();
@@ -141,9 +167,10 @@ export component SettingsView inherits Rectangle {
                 }
                 HorizontalLayout {
                     alignment: end;
-                    Button {
+                    CfButton {
                         text: "Standardwerte speichern";
-                        primary: true;
+                        icon: IconKind.save;
+                        kind: ButtonKind.primary;
                         clicked => {
                             SettingsPage.save-defaults();
                         }
@@ -151,25 +178,28 @@ export component SettingsView inherits Rectangle {
                 }
             }
             Card {
-                Heading {
+                accent: Theme.lime;
+                SectionTitle {
                     text: "Datenbank";
                 }
-                Muted {
-                    text: "Verbunden mit " + SettingsPage.connection-url;
+                IconLine {
+                    icon: IconKind.employers;
+                    text: SettingsPage.connection-url == "" ? "Keine Verbindung eingerichtet" : "Verbunden mit " + SettingsPage.connection-url;
                 }
                 Muted {
                     text: "Protokolldatei: " + SettingsPage.log-file;
                 }
                 FlexboxLayout {
-                    spacing: 8px;
-                    Button {
+                    spacing: 10px;
+                    CfButton {
                         text: "Verbindung ändern …";
                         clicked => {
                             SettingsPage.change-connection();
                         }
                     }
-                    Button {
+                    CfButton {
                         text: "Protokoll öffnen";
+                        icon: IconKind.documents;
                         clicked => {
                             SettingsPage.open-log();
                         }

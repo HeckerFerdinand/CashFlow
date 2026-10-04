@@ -13,10 +13,18 @@ Supabase-Datenbank (PostgreSQL), sodass mehrere Personen und Rechner mit demselb
 - **Dokumente (PDF):** Lohnabrechnung, Lohnjournal und Zeitjournal – je Mitarbeiter ein Ordner
   „Personalnummer Nachname“ im frei wählbaren Ablageordner (z. B. Netzlaufwerk).
 
+## Installation (Windows)
+
+Installer herunterladen und ausführen – keine Administratorrechte nötig:
+
+**<https://github.com/HeckerFerdinand/CashFlow/releases/latest/download/CashFlow-Setup.exe>**
+
+(Der Link funktioniert, sobald ein Release veröffentlicht ist; siehe [docs/RELEASE.md](docs/RELEASE.md).)
+
 ## Erste Schritte
 
 1. Datenbank einrichten: **[docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md)**
-2. CashFlow starten, Verbindung eintragen, anmelden.
+2. CashFlow starten, Verbindung eintragen (entfällt bei vorkonfigurierten Builds), anmelden.
 
 ## Entwicklung
 
@@ -69,15 +77,11 @@ CASHFLOW_SUPABASE_URL=https://xxxx.supabase.co CASHFLOW_SUPABASE_KEY=sb_publisha
   cargo build --release -p cashflow-app
 ```
 
-Für Windows baut der GitHub-Workflow `.github/workflows/release.yml` die `CashFlow.exe`, sobald ein
-Tag wie `v2.0.0` gepusht wird (Repository-Variablen `SUPABASE_URL` und `SUPABASE_PUBLISHABLE_KEY`).
+Für Windows baut der GitHub-Workflow `.github/workflows/release.yml` Installer und portable Version,
+sobald ein Tag wie `v2.0.0` gepusht wird – Details und Einrichtung in [docs/RELEASE.md](docs/RELEASE.md).
+CashFlow erkennt neue Releases beim Start selbst und weist auf das Update hin.
 
-### Updates veröffentlichen
-
-1. Version in `Cargo.toml` (`workspace.package.version`) und `CHANGELOG.md` anpassen.
-2. Tag pushen, Release-Datei anhängen.
-3. Die Versionsdatei des Update-Checks (Gist `version.txt`) auf die neue Nummer setzen –
-   CashFlow weist dann beim Start auf das Update hin.
+App-Icons nach einer Logo-Änderung neu erzeugen: `cargo run -p cashflow-app --example icons`.
 
 ## Änderungen gegenüber Version 1 (Java)
 

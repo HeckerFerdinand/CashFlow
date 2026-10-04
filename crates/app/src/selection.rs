@@ -81,3 +81,28 @@ pub fn first_employed(app: &Rc<App>, ids: &[Uuid], period: Period) -> Option<Uui
         })
     })
 }
+
+/// Up to two upper-case initials ("Weber, Anna" → "AW" when given first/last name).
+pub fn initials(first: &str, second: &str) -> String {
+    [first, second].iter().filter_map(|part| part.trim().chars().next()).flat_map(char::to_uppercase).collect()
+}
+
+/// Initials of a company name: the first letters of the first two words.
+pub fn name_initials(name: &str) -> String {
+    let mut words = name.split_whitespace().filter(|w| w.chars().next().is_some_and(char::is_alphanumeric));
+    initials(words.next().unwrap_or_default(), words.next().unwrap_or_default())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn builds_initials() {
+        assert_eq!(initials("anna", "Weber"), "AW");
+        assert_eq!(initials("Łukasz", ""), "Ł");
+        assert_eq!(name_initials("Hausverwaltung Hecker GmbH"), "HH");
+        assert_eq!(name_initials("WEG – Lindenallee 12"), "WL");
+        assert_eq!(name_initials(""), "");
+    }
+}

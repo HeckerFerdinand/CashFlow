@@ -4,6 +4,10 @@
 # Local development database and tools (scripts/dev-db.sh)
 /.dev/
 
+# Packaging output
+/dist/
+/portable/
+
 # Editors / OS
 .idea/
 .vscode/

@@ -1,18 +1,25 @@
 // Window chrome inside the app: navigation sidebar, busy indicator,
 // notifications and the confirmation dialog.
 
-import { Button, Spinner } from "std-widgets.slint";
 import { Theme } from "theme.slint";
 import { Nav, Page, AppState, Notices, Notice, NoticeKind, Confirm } from "state.slint";
-import { Card } from "widgets.slint";
+import { Icon, IconKind } from "icons.slint";
+import { CfButton, ButtonKind, CfSpinner, IconButton } from "controls.slint";
 
 component NavItem inherits Rectangle {
     in property <string> label;
     in property <Page> page;
+    in property <IconKind> icon;
     property <bool> active: Nav.page == root.page;
-    min-height: 36px;
-    border-radius: 6px;
-    background: root.active ? #ffffff2e : touch.has-hover ? #ffffff14 : transparent;
+    min-height: 40px;
+    border-radius: 9px;
+    background: root.active ? white : touch.has-hover ? #ffffff1f : transparent;
+    drop-shadow-blur: root.active ? 10px : 0px;
+    drop-shadow-offset-y: 2px;
+    drop-shadow-color: #0000002e;
+    animate background { duration: 120ms; }
+    accessible-role: button;
+    accessible-label: root.label;
     touch := TouchArea {
         mouse-cursor: pointer;
         clicked => {
@@ -21,54 +28,74 @@ component NavItem inherits Rectangle {
     }
     HorizontalLayout {
         padding-left: 12px;
-        padding-right: 8px;
+        padding-right: 10px;
+        spacing: 12px;
+        VerticalLayout {
+            alignment: center;
+            Icon {
+                kind: root.icon;
+                size: 20px;
+                fill: root.active ? Theme.brand : #ffffffd9;
+            }
+        }
         Text {
             text: root.label;
             vertical-alignment: center;
-            color: white;
-            font-weight: root.active ? 700 : 400;
+            color: root.active ? Theme.brand-dark : white;
+            font-weight: root.active ? 700 : 600;
+            font-size: 15.5px;
             overflow: elide;
         }
     }
 }
 
 component NavGroup inherits Text {
-    color: #ffffffa8;
-    font-size: 11px;
-    font-weight: 600;
+    color: #ffffffa6;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
 }
 
 export component Sidebar inherits Rectangle {
-    background: Theme.brand;
-    min-width: 190px;
-    preferred-width: 220px;
-    max-width: 240px;
+    background: @linear-gradient(180deg, #2a8c47 0%, #19552a 100%);
+    min-width: 200px;
+    preferred-width: 232px;
+    max-width: 250px;
     horizontal-stretch: 0;
     VerticalLayout {
-        padding: 14px;
-        padding-top: 18px;
+        padding: 16px;
+        padding-top: 20px;
         spacing: 4px;
         HorizontalLayout {
-            spacing: 10px;
-            padding-bottom: 14px;
+            spacing: 12px;
+            padding-bottom: 18px;
             Rectangle {
-                width: 34px;
-                height: 34px;
-                border-radius: 8px;
+                width: 42px;
+                height: 42px;
+                border-radius: 12px;
                 background: white;
+                drop-shadow-blur: 10px;
+                drop-shadow-color: #00000040;
                 Image {
                     source: @image-url("../../../assets/logo.png");
-                    width: 26px;
-                    height: 26px;
+                    width: 32px;
+                    height: 32px;
                     image-fit: contain;
                 }
             }
-            Text {
-                text: "CashFlow";
-                color: white;
-                font-size: 20px;
-                font-weight: 700;
-                vertical-alignment: center;
+            VerticalLayout {
+                alignment: center;
+                Text {
+                    text: "CashFlow";
+                    color: white;
+                    font-size: 24px;
+                    font-weight: 700;
+                }
+                Text {
+                    text: "Lohnabrechnung";
+                    color: #ffffffb3;
+                    font-size: 12.5px;
+                }
             }
         }
         NavGroup {
@@ -77,21 +104,25 @@ export component Sidebar inherits Rectangle {
         NavItem {
             label: "Übersicht";
             page: Page.overview;
+            icon: IconKind.overview;
         }
         NavItem {
             label: "Lohnerfassung";
             page: Page.payroll;
+            icon: IconKind.payroll;
         }
         NavItem {
             label: "Zeiterfassung";
             page: Page.time;
+            icon: IconKind.time;
         }
         NavItem {
             label: "Dokumente";
             page: Page.documents;
+            icon: IconKind.documents;
         }
         Rectangle {
-            height: 10px;
+            height: 14px;
         }
         NavGroup {
             text: "STAMMDATEN";
@@ -99,10 +130,12 @@ export component Sidebar inherits Rectangle {
         NavItem {
             label: "Mitarbeiter";
             page: Page.employees;
+            icon: IconKind.employees;
         }
         NavItem {
             label: "Arbeitgeber";
             page: Page.employers;
+            icon: IconKind.employers;
         }
         Rectangle {
             vertical-stretch: 1;
@@ -110,79 +143,110 @@ export component Sidebar inherits Rectangle {
         NavItem {
             label: "Einstellungen";
             page: Page.settings;
+            icon: IconKind.settings;
         }
         NavItem {
             label: "Info";
             page: Page.about;
+            icon: IconKind.info;
         }
         Rectangle {
-            height: 1px;
-            background: #ffffff33;
+            height: 10px;
         }
-        Text {
-            text: AppState.user-email;
-            color: #ffffffcc;
-            font-size: 11px;
-            overflow: elide;
-        }
-        TouchArea {
-            mouse-cursor: pointer;
-            height: 24px;
-            clicked => {
-                AppState.sign-out();
-            }
-            Text {
-                text: "Abmelden";
-                color: white;
-                font-size: 12px;
-                horizontal-alignment: left;
-                width: 100%;
+        Rectangle {
+            border-radius: 10px;
+            background: #00000026;
+            HorizontalLayout {
+                padding: 8px;
+                padding-left: 10px;
+                spacing: 8px;
+                VerticalLayout {
+                    alignment: center;
+                    Icon {
+                        kind: IconKind.person;
+                        size: 18px;
+                        fill: #ffffffcc;
+                    }
+                }
+                Text {
+                    text: AppState.user-email;
+                    color: #ffffffd9;
+                    font-size: 12.5px;
+                    vertical-alignment: center;
+                    overflow: elide;
+                    horizontal-stretch: 1;
+                }
+                IconButton {
+                    icon: IconKind.logout;
+                    icon-color: white;
+                    size: 30px;
+                    tooltip: "Abmelden";
+                    clicked => {
+                        AppState.sign-out();
+                    }
+                }
             }
         }
     }
 }
 
-// Small floating "working…" indicator (top right).
+// Small floating "working …" indicator (top right).
 export component BusyIndicator inherits Rectangle {
     visible: AppState.busy;
-    border-radius: 16px;
+    border-radius: 18px;
     background: Theme.surface;
     border-width: 1px;
     border-color: Theme.border;
-    drop-shadow-blur: 8px;
-    drop-shadow-color: #0000001f;
+    drop-shadow-blur: 12px;
+    drop-shadow-offset-y: 2px;
+    drop-shadow-color: #0000002b;
     width: row.preferred-width;
-    height: 32px;
+    height: 36px;
     row := HorizontalLayout {
-        padding-left: 10px;
-        padding-right: 14px;
-        spacing: 8px;
-        Spinner {
-            indeterminate: true;
-            width: 18px;
-            height: 18px;
-            y: 7px;
-        }
+        padding-left: 14px;
+        padding-right: 16px;
+        spacing: 10px;
+        CfSpinner { }
         Text {
             text: AppState.busy-text == "" ? "Bitte warten …" : AppState.busy-text;
             vertical-alignment: center;
             color: Theme.text;
             font-size: Theme.font-small;
+            font-weight: 600;
         }
     }
 }
 
 component NoticeView inherits Rectangle {
     in property <Notice> notice;
-    border-radius: 8px;
-    background: root.notice.kind == NoticeKind.error ? Theme.error-light : root.notice.kind == NoticeKind.success ? Theme.success-light : Theme.info-light;
+    property <color> tone: root.notice.kind == NoticeKind.error ? Theme.error : root.notice.kind == NoticeKind.success ? Theme.success : #3f6fc0;
+    border-radius: 10px;
+    background: Theme.surface;
     border-width: 1px;
-    border-color: root.notice.kind == NoticeKind.error ? Theme.error : root.notice.kind == NoticeKind.success ? Theme.success : Theme.border;
-    drop-shadow-blur: 10px;
-    drop-shadow-color: #00000026;
+    border-color: root.tone.with-alpha(0.35);
+    drop-shadow-blur: 16px;
+    drop-shadow-offset-y: 4px;
+    drop-shadow-color: #00000033;
+    clip: true;
+    Rectangle {
+        x: 0px;
+        width: 5px;
+        background: root.tone;
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+    }
     HorizontalLayout {
         padding: 12px;
+        padding-left: 16px;
         spacing: 10px;
+        VerticalLayout {
+            alignment: start;
+            Icon {
+                kind: root.notice.kind == NoticeKind.error ? IconKind.error : root.notice.kind == NoticeKind.success ? IconKind.success : IconKind.info;
+                size: 20px;
+                fill: root.tone;
+            }
+        }
         Text {
             text: root.notice.text;
             wrap: word-wrap;
@@ -190,16 +254,15 @@ component NoticeView inherits Rectangle {
             horizontal-stretch: 1;
             vertical-alignment: center;
         }
-        TouchArea {
-            width: 20px;
-            mouse-cursor: pointer;
-            clicked => {
-                Notices.dismiss(root.notice.id);
-            }
-            Text {
-                text: "✕";
-                color: Theme.text-muted;
-                vertical-alignment: top;
+        VerticalLayout {
+            alignment: start;
+            IconButton {
+                icon: IconKind.close;
+                size: 24px;
+                tooltip: "Schließen";
+                clicked => {
+                    Notices.dismiss(root.notice.id);
+                }
             }
         }
     }
@@ -207,50 +270,81 @@ component NoticeView inherits Rectangle {
 
 // Stack of notifications in the bottom right corner.
 export component NoticeStack inherits VerticalLayout {
-    spacing: 8px;
+    spacing: 10px;
     alignment: end;
     for notice in Notices.items: NoticeView {
         notice: notice;
     }
 }
 
-// Modal confirmation ("Wirklich löschen?").
+// Modal confirmation ("Wirklich löschen?"), with a colored title bar like
+// the popups of the old app.
 export component ConfirmDialog inherits Rectangle {
-    background: #00000059;
+    background: #0f1f1559;
     TouchArea { }
-    Card {
-        width: min(460px, root.width - 32px);
-        height: self.preferred-height;
+    Rectangle {
+        width: min(480px, root.width - 32px);
+        height: body.preferred-height;
         x: (root.width - self.width) / 2;
         y: (root.height - self.height) / 2;
-        pad: 22px;
-        gap: 14px;
-        Text {
-            text: Confirm.title;
-            font-size: Theme.font-heading;
-            font-weight: 700;
-            color: Theme.text;
-            wrap: word-wrap;
-        }
-        Text {
-            text: Confirm.message;
-            color: Theme.text;
-            wrap: word-wrap;
-        }
-        HorizontalLayout {
-            alignment: end;
-            spacing: 8px;
-            Button {
-                text: "Abbrechen";
-                clicked => {
-                    Confirm.rejected();
+        background: Theme.surface;
+        border-radius: 12px;
+        drop-shadow-blur: 30px;
+        drop-shadow-offset-y: 8px;
+        drop-shadow-color: #00000059;
+        clip: true;
+        body := VerticalLayout {
+            Rectangle {
+                background: Confirm.destructive ? Theme.error : Theme.brand-gradient;
+                border-top-left-radius: 12px;
+                border-top-right-radius: 12px;
+                HorizontalLayout {
+                    padding: 16px;
+                    padding-left: 20px;
+                    spacing: 10px;
+                    VerticalLayout {
+                        alignment: center;
+                        Icon {
+                            kind: Confirm.destructive ? IconKind.delete : IconKind.info;
+                            size: 22px;
+                            fill: white;
+                        }
+                    }
+                    Text {
+                        text: Confirm.title;
+                        font-size: Theme.font-heading;
+                        font-weight: 700;
+                        color: white;
+                        wrap: word-wrap;
+                        vertical-alignment: center;
+                        horizontal-stretch: 1;
+                    }
                 }
             }
-            Button {
-                text: Confirm.confirm-label;
-                primary: true;
-                clicked => {
-                    Confirm.accepted();
+            VerticalLayout {
+                padding: 20px;
+                spacing: 18px;
+                Text {
+                    text: Confirm.message;
+                    color: Theme.text;
+                    wrap: word-wrap;
+                }
+                HorizontalLayout {
+                    alignment: end;
+                    spacing: 10px;
+                    CfButton {
+                        text: "Abbrechen";
+                        clicked => {
+                            Confirm.rejected();
+                        }
+                    }
+                    CfButton {
+                        text: Confirm.confirm-label;
+                        kind: Confirm.destructive ? ButtonKind.danger : ButtonKind.primary;
+                        clicked => {
+                            Confirm.accepted();
+                        }
+                    }
                 }
             }
         }

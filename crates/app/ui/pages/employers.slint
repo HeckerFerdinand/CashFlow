@@ -1,5 +1,6 @@
 import { ListItem, FormSection } from "../state.slint";
 import { MasterDetail } from "../master-detail.slint";
+import { IconKind } from "../icons.slint";
 
 export global EmployersPage {
     in property <[ListItem]> items;
@@ -19,7 +20,9 @@ export global EmployersPage {
 }
 
 export component EmployersView inherits MasterDetail {
+    overline: "STAMMDATEN";
     list-title: "Arbeitgeber";
+    list-icon: IconKind.employers;
     empty-list-text: "Lege mit „Neu“ den ersten Arbeitgeber an.";
     nothing-selected-text: "Wähle links einen Arbeitgeber aus oder lege einen neuen an.";
     items: EmployersPage.items;

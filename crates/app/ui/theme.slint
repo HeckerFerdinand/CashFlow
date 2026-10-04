@@ -1,27 +1,50 @@
-// Design tokens. Colors follow the old app (brand green #267f3f,
-// blue for wage records, orange for time records).
+// Design tokens, derived from the stylesheet of CashFlow 1 (Home1.css):
+// brand green #267f3f with #19552a for hover, lime #7bab15 for info boxes,
+// blue #7395ff for wage and peach #ffae83 for time records, Calibri-like font.
 export global Theme {
+    // Brand
     out property <color> brand: #267f3f;
-    out property <color> brand-dark: #1b5e2f;
-    out property <color> brand-light: #e6f1e9;
-    out property <color> background: #f3f5f4;
+    out property <color> brand-dark: #19552a;
+    out property <color> brand-darker: #12401f;
+    out property <color> brand-light: #dff0e3;
+    out property <color> brand-lighter: #f0f8f2;
+    out property <brush> brand-gradient: @linear-gradient(90deg, #2c944a 0%, #1d6432 100%);
+    out property <color> lime: #7bab15;
+    out property <color> lime-light: #f2f8e4;
+    // Surfaces and text
+    out property <color> background: #eef2ef;
     out property <color> surface: #ffffff;
-    out property <color> surface-alt: #f7f9f8;
-    out property <color> border: #dce2de;
-    out property <color> text: #1b2420;
-    out property <color> text-muted: #5e6a64;
+    out property <color> surface-alt: #f6f8f7;
+    out property <color> border: #d6ded9;
+    out property <color> border-strong: #b7c3bc;
+    out property <color> text: #17211b;
+    out property <color> text-muted: #5a6760;
+    out property <color> placeholder: #96a29b;
+    // States
     out property <color> error: #b3261e;
-    out property <color> error-light: #fbeaea;
+    out property <color> error-light: #fcebea;
     out property <color> success: #2e7d32;
-    out property <color> success-light: #e8f4e9;
-    out property <color> info-light: #e8eef9;
-    out property <color> payroll: #4f6bed;
-    out property <color> time: #f08a4b;
-    out property <length> radius: 8px;
+    out property <color> success-light: #e6f4e7;
+    out property <color> info-light: #e9f0fb;
+    out property <color> warning: #9a5b00;
+    out property <color> warning-light: #fff4e2;
+    // Record markers (old app colors)
+    out property <color> payroll: #7395ff;
+    out property <color> payroll-dark: #4b68d6;
+    out property <color> time: #ffae83;
+    out property <color> time-dark: #e07a45;
+    // Shape and spacing
+    out property <length> radius: 10px;
+    out property <length> control-radius: 7px;
     out property <length> gap: 12px;
-    out property <length> page-padding: 24px;
-    out property <length> font-small: 12px;
-    out property <length> font-normal: 14px;
-    out property <length> font-heading: 16px;
-    out property <length> font-title: 22px;
+    out property <length> page-padding: 26px;
+    out property <length> control-height: 36px;
+    // Typography (Carlito, metric-compatible with Calibri)
+    out property <string> font: "Carlito";
+    out property <length> font-small: 13px;
+    out property <length> font-normal: 15px;
+    out property <length> font-heading: 18px;
+    out property <length> font-title: 28px;
+    // Elevation
+    out property <color> shadow: #12401f1a;
 }

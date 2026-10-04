@@ -1,5 +1,9 @@
 // Main window. Shows the login until signed in, then sidebar + current page.
 
+// Carlito: metric-compatible with Calibri, the font of CashFlow 1.
+import "../../../assets/fonts/Carlito-Regular.ttf";
+import "../../../assets/fonts/Carlito-Bold.ttf";
+
 import { Palette } from "std-widgets.slint";
 import { Theme } from "theme.slint";
 import { Nav, Page, AppState, Notices, Confirm, ListItem, FormField, FormSection, FieldKind, Notice, NoticeKind, KeyValueItem } from "state.slint";
@@ -21,12 +25,13 @@ export { DocumentsPage, SettingsPage, AboutPage }
 
 export component AppWindow inherits Window {
     title: "CashFlow";
-    icon: @image-url("../../../assets/logo.png");
+    icon: @image-url("../../../assets/icon.png");
     min-width: 820px;
     min-height: 540px;
     preferred-width: 1280px;
     preferred-height: 800px;
     background: Theme.background;
+    default-font-family: Theme.font;
     default-font-size: Theme.font-normal;
 
     init => {
@@ -51,8 +56,8 @@ export component AppWindow inherits Window {
     }
 
     BusyIndicator {
-        x: parent.width - self.width - 16px;
-        y: 12px;
+        x: parent.width - self.width - 18px;
+        y: 14px;
     }
 
     NoticeStack {

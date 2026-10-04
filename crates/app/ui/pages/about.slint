@@ -1,7 +1,9 @@
-import { Button, ScrollView, AboutSlint } from "std-widgets.slint";
+import { ScrollView, AboutSlint } from "std-widgets.slint";
 import { Theme } from "../theme.slint";
 import { AppState } from "../state.slint";
-import { Card, Heading, Muted } from "../widgets.slint";
+import { Card, Heading, Muted, SectionTitle } from "../widgets.slint";
+import { Icon, IconKind } from "../icons.slint";
+import { CfButton, ButtonKind } from "../controls.slint";
 
 export global AboutPage {
     in property <string> imprint;
@@ -19,48 +21,77 @@ export component AboutView inherits Rectangle {
         VerticalLayout {
             width: parent.visible-width;
             padding: Theme.page-padding;
-            spacing: 16px;
+            spacing: 18px;
             alignment: start;
-            Card {
+            // Header band like the old start screen
+            Rectangle {
+                border-radius: 14px;
+                background: Theme.brand-gradient;
+                drop-shadow-blur: 18px;
+                drop-shadow-offset-y: 4px;
+                drop-shadow-color: #19552a4d;
+                clip: true;
+                Rectangle {
+                    x: parent.width - 190px;
+                    y: -70px;
+                    width: 260px;
+                    height: 260px;
+                    border-radius: 130px;
+                    background: #ffffff12;
+                }
                 HorizontalLayout {
-                    spacing: 16px;
-                    Image {
-                        source: @image-url("../../../../assets/logo.png");
-                        width: 56px;
-                        height: 64px;
-                        image-fit: contain;
+                    padding: 24px;
+                    spacing: 20px;
+                    Rectangle {
+                        width: 84px;
+                        height: 84px;
+                        border-radius: 20px;
+                        background: white;
+                        border-width: 1px;
+                        border-color: #ffffff80;
+                        Image {
+                            source: @image-url("../../../../assets/logo.png");
+                            width: 62px;
+                            height: 62px;
+                            image-fit: contain;
+                        }
                     }
                     VerticalLayout {
                         alignment: center;
                         horizontal-stretch: 1;
+                        spacing: 4px;
                         Text {
                             text: "CashFlow";
-                            font-size: 26px;
+                            font-size: 34px;
                             font-weight: 700;
-                            color: Theme.brand;
+                            color: white;
                         }
-                        Muted {
+                        Text {
                             text: "Version " + AppState.version + " · Lohnabrechnung für Minijobs";
+                            color: #ffffffd9;
+                            wrap: word-wrap;
                         }
                         if AboutPage.update-text != "": Text {
                             text: AboutPage.update-text;
-                            color: AboutPage.update-available ? Theme.brand-dark : Theme.text-muted;
-                            font-weight: AboutPage.update-available ? 600 : 400;
+                            color: white;
+                            font-weight: AboutPage.update-available ? 700 : 400;
                             wrap: word-wrap;
                         }
                     }
                     VerticalLayout {
                         alignment: center;
-                        spacing: 6px;
-                        Button {
+                        spacing: 8px;
+                        CfButton {
                             text: "Nach Updates suchen";
+                            icon: IconKind.refresh;
+                            kind: ButtonKind.light;
                             clicked => {
                                 AboutPage.check-updates();
                             }
                         }
-                        if AboutPage.update-available: Button {
+                        if AboutPage.update-available: CfButton {
                             text: "Download öffnen";
-                            primary: true;
+                            kind: ButtonKind.light;
                             clicked => {
                                 AboutPage.open-download();
                             }
@@ -76,7 +107,8 @@ export component AboutView inherits Rectangle {
                     min-width: 280px;
                     preferred-width: 380px;
                     horizontal-stretch: 1;
-                    Heading {
+                    accent: Theme.lime;
+                    SectionTitle {
                         text: "Impressum";
                     }
                     Text {
@@ -84,12 +116,15 @@ export component AboutView inherits Rectangle {
                         color: Theme.text;
                         wrap: word-wrap;
                     }
+                    Rectangle {
+                        vertical-stretch: 1;
+                    }
                 }
                 Card {
                     min-width: 280px;
                     preferred-width: 380px;
                     horizontal-stretch: 1;
-                    Heading {
+                    SectionTitle {
                         text: "Änderungsprotokoll";
                     }
                     Text {
@@ -97,10 +132,13 @@ export component AboutView inherits Rectangle {
                         color: Theme.text;
                         wrap: word-wrap;
                     }
+                    Rectangle {
+                        vertical-stretch: 1;
+                    }
                 }
             }
             Card {
-                Heading {
+                SectionTitle {
                     text: "Haftungsausschluss";
                 }
                 Muted {
@@ -108,7 +146,7 @@ export component AboutView inherits Rectangle {
                 }
             }
             Card {
-                Heading {
+                SectionTitle {
                     text: "Lizenzen";
                 }
                 Muted {

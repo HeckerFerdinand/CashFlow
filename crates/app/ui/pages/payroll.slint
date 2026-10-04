@@ -1,4 +1,6 @@
-import { Button, ScrollView } from "std-widgets.slint";
+import { ScrollView } from "std-widgets.slint";
+import { CfButton, ButtonKind } from "../controls.slint";
+import { IconKind } from "../icons.slint";
 import { Theme } from "../theme.slint";
 import { FormSection, KeyValueItem } from "../state.slint";
 import { Card, PageHeader, FormView, SelectionBar, SummaryCard, InfoBox, EmptyState, ErrorBox } from "../widgets.slint";
@@ -48,27 +50,32 @@ component PayrollForm inherits VerticalLayout {
     HorizontalLayout {
         spacing: 8px;
         alignment: end;
-        if PayrollPage.exists: Button {
+        if PayrollPage.exists: CfButton {
             text: "Löschen";
+            icon: IconKind.delete;
+            kind: ButtonKind.danger;
             clicked => {
                 PayrollPage.delete();
             }
         }
-        if PayrollPage.exists: Button {
+        if PayrollPage.exists: CfButton {
             text: "Nur PDF";
+            icon: IconKind.documents;
             clicked => {
                 PayrollPage.print();
             }
         }
-        Button {
+        CfButton {
             text: "Speichern";
+            icon: IconKind.save;
             clicked => {
                 PayrollPage.save();
             }
         }
-        Button {
+        CfButton {
             text: "Speichern & PDF";
-            primary: true;
+            icon: IconKind.documents;
+            kind: ButtonKind.primary;
             clicked => {
                 PayrollPage.save-and-print();
             }
@@ -82,10 +89,12 @@ component PayrollSummary inherits VerticalLayout {
     SummaryCard {
         title: "Berechnung";
         lines: PayrollPage.calculation;
+        accent: Theme.brand;
     }
     SummaryCard {
         title: "Stammdaten";
         lines: PayrollPage.info;
+        accent: Theme.lime;
     }
 }
 
@@ -98,6 +107,7 @@ export component PayrollView inherits Rectangle {
             spacing: 16px;
             alignment: start;
             PageHeader {
+                overline: "LOHNBUCHHALTUNG";
                 title: "Lohnerfassung";
                 subtitle: "Monatliche Bezüge erfassen; die Beiträge werden automatisch berechnet.";
             }
@@ -117,6 +127,7 @@ export component PayrollView inherits Rectangle {
             }
             if !PayrollPage.ready: Card {
                 EmptyState {
+                    icon: IconKind.person;
                     title: "Mitarbeiter wählen";
                     text: PayrollPage.employees.length == 0 ? "Es gibt noch keine Mitarbeiter. Lege sie unter „Mitarbeiter“ an." : "Wähle oben Mitarbeiter und Monat.";
                 }

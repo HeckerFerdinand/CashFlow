@@ -38,11 +38,10 @@ jsonwebtoken = { version = "11", default-features = false, features = ["rust_cry
 rust_decimal_macros.workspace = true
 serde_json.workspace = true
 i-slint-backend-testing = { version = "=1.18.1", features = ["renderer-software"] }
-image = { version = "0.25", default-features = false, features = ["png"] }
+image = { version = "0.25", default-features = false, features = ["png", "ico"] }
 
 [build-dependencies]
 slint-build.workspace = true
-image = { version = "0.25", default-features = false, features = ["png", "ico"] }
 
 [target.'cfg(windows)'.build-dependencies]
 winresource = "0.1"

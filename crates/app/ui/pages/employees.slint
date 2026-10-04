@@ -1,5 +1,6 @@
 import { ListItem, FormSection } from "../state.slint";
 import { MasterDetail } from "../master-detail.slint";
+import { IconKind } from "../icons.slint";
 
 export global EmployeesPage {
     in property <[ListItem]> items;
@@ -21,7 +22,9 @@ export global EmployeesPage {
 }
 
 export component EmployeesView inherits MasterDetail {
+    overline: "STAMMDATEN";
     list-title: "Mitarbeiter";
+    list-icon: IconKind.employees;
     empty-list-text: "Lege mit „Neu“ den ersten Mitarbeiter an. Vorher muss ein Arbeitgeber angelegt sein.";
     nothing-selected-text: "Wähle links einen Mitarbeiter aus oder lege einen neuen an.";
     filter-label: "Ausgeschiedene anzeigen";

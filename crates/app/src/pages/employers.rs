@@ -212,6 +212,7 @@ fn show_list(app: &Rc<App>) {
                     n => format!("{n} Mitarbeiter").into(),
                 },
                 muted: false,
+                initials: crate::selection::name_initials(&e.data.name).into(),
             }
         })
         .collect();

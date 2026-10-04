@@ -14,10 +14,11 @@ use std::path::PathBuf;
 const BUILT_IN_URL: Option<&str> = option_env!("CASHFLOW_SUPABASE_URL");
 const BUILT_IN_KEY: Option<&str> = option_env!("CASHFLOW_SUPABASE_KEY");
 
-/// Where the update check looks for the latest version number (plain text).
-const DEFAULT_UPDATE_URL: &str =
-    "https://gist.githubusercontent.com/HeckerFerdinand/f0e799558d487d925598c8cf560d8cf5/raw/version.txt";
-const DEFAULT_DOWNLOAD_URL: &str = "https://github.com/HeckerFerdinand/CashFlow/releases";
+/// Where the update check looks for the latest version: the GitHub API of the
+/// latest release (JSON with "tag_name") or a plain text file such as "2.0.1".
+const DEFAULT_UPDATE_URL: &str = "https://api.github.com/repos/HeckerFerdinand/CashFlow/releases/latest";
+/// Page that offers the installer of the latest version.
+const DEFAULT_DOWNLOAD_URL: &str = "https://github.com/HeckerFerdinand/CashFlow/releases/latest";
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(default)]

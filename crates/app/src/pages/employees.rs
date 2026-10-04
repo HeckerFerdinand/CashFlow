@@ -2,6 +2,7 @@
 
 use crate::context::App;
 use crate::forms::{self, FieldSpec, SectionSpec, none_choice};
+use crate::selection;
 use crate::ui::{EmployeesPage, ListItem};
 use cashflow_core::{Contribution, EmployeeData, EmployeeDraft, Gender, TransitionZone, ValidationErrors};
 use chrono::Local;
@@ -270,6 +271,7 @@ fn show_list(app: &Rc<App>) {
                 subtitle: format!("{} · {employer}", e.data.personnel_number).into(),
                 badge: if former { "ausgeschieden".into() } else { "".into() },
                 muted: former,
+                initials: selection::initials(&e.data.first_name, &e.data.last_name).into(),
             }
         })
         .collect();

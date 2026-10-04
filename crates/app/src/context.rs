@@ -219,6 +219,9 @@ impl App {
         confirm.set_title(title.into());
         confirm.set_message(message.into());
         confirm.set_confirm_label(confirm_label.into());
+        // Deleting and discarding are shown in red.
+        let lower = confirm_label.to_lowercase();
+        confirm.set_destructive(lower.contains("lösch") || lower.contains("verwerfen") || lower.contains("beenden"));
         confirm.set_open(true);
     }
 

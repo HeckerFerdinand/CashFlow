@@ -77,6 +77,9 @@ fn main() {
         ("employers-edit", Page::Employers, Some(open_first_employer)),
         ("settings", Page::Settings, None),
         ("about", Page::About, None),
+        // States: validation errors, then the delete confirmation (stays open, so last).
+        ("employers-invalid", Page::Employers, Some(invalid_employer)),
+        ("confirm-delete", Page::Employees, Some(delete_first_employee)),
     ];
     let steps: Vec<(Page, &str, Action)> = pages
         .into_iter()
@@ -142,6 +145,20 @@ fn open_first_employer(window: &AppWindow) {
     if let Some(item) = page.get_items().row_data(0) {
         page.invoke_select(item.id);
     }
+}
+
+fn invalid_employer(window: &AppWindow) {
+    use cashflow_app::ui::EmployersPage;
+    let page = window.global::<EmployersPage>();
+    page.invoke_create();
+    page.invoke_edited("company_number".into(), "123".into());
+    page.invoke_edited("postal_code".into(), "9333".into());
+    page.invoke_save();
+}
+
+fn delete_first_employee(window: &AppWindow) {
+    open_first_employee(window);
+    window.global::<cashflow_app::ui::EmployeesPage>().invoke_delete();
 }
 
 fn open_first_employee(window: &AppWindow) {

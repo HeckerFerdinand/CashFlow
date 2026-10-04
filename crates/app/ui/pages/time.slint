@@ -1,4 +1,6 @@
-import { Button, ScrollView } from "std-widgets.slint";
+import { ScrollView } from "std-widgets.slint";
+import { CfButton, ButtonKind } from "../controls.slint";
+import { IconKind } from "../icons.slint";
 import { Theme } from "../theme.slint";
 import { FormSection, KeyValueItem } from "../state.slint";
 import { Card, PageHeader, FormView, SelectionBar, SummaryCard, InfoBox, EmptyState, ErrorBox } from "../widgets.slint";
@@ -41,15 +43,18 @@ component TimeForm inherits VerticalLayout {
     HorizontalLayout {
         spacing: 8px;
         alignment: end;
-        if TimePage.exists: Button {
+        if TimePage.exists: CfButton {
             text: "Löschen";
+            icon: IconKind.delete;
+            kind: ButtonKind.danger;
             clicked => {
                 TimePage.delete();
             }
         }
-        Button {
+        CfButton {
             text: "Speichern";
-            primary: true;
+            icon: IconKind.save;
+            kind: ButtonKind.primary;
             clicked => {
                 TimePage.save();
             }
@@ -66,6 +71,7 @@ export component TimeView inherits Rectangle {
             spacing: 16px;
             alignment: start;
             PageHeader {
+                overline: "LOHNBUCHHALTUNG";
                 title: "Zeiterfassung";
                 subtitle: "Arbeitsstunden, Regiestunden, Urlaubs- und Krankheitstage pro Monat.";
             }
@@ -85,6 +91,7 @@ export component TimeView inherits Rectangle {
             }
             if !TimePage.ready: Card {
                 EmptyState {
+                    icon: IconKind.person;
                     title: "Mitarbeiter wählen";
                     text: TimePage.employees.length == 0 ? "Es gibt noch keine Mitarbeiter. Lege sie unter „Mitarbeiter“ an." : "Wähle oben Mitarbeiter und Monat.";
                 }
@@ -103,6 +110,7 @@ export component TimeView inherits Rectangle {
                     SummaryCard {
                         title: "Zusammenfassung";
                         lines: TimePage.summary;
+                        accent: Theme.time-dark;
                     }
                 }
             }
@@ -112,6 +120,7 @@ export component TimeView inherits Rectangle {
                 SummaryCard {
                     title: "Zusammenfassung";
                     lines: TimePage.summary;
+                    accent: Theme.time-dark;
                 }
             }
         }
