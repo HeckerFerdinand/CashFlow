@@ -1,0 +1,180 @@
+import { Button, ComboBox, ScrollView } from "std-widgets.slint";
+import { Theme } from "../theme.slint";
+import { Card, PageHeader, Heading, Muted } from "../widgets.slint";
+
+export global DocumentsPage {
+    // Payslip: single employees only.
+    in property <[string]> employees;
+    in-out property <int> payslip-employee: -1;
+    in-out property <int> payslip-month;
+    in-out property <int> payslip-year;
+    // Journals: index 0 = "Alle Mitarbeiter".
+    in property <[string]> journal-employees;
+    in-out property <int> journal-employee;
+    in-out property <int> journal-year;
+    in property <[string]> months;
+    in property <[string]> years;
+    in property <string> folder;
+    in property <string> last-file;
+    callback create-payslip();
+    callback create-payroll-journal();
+    callback create-time-journal();
+    callback open-folder();
+    callback change-folder();
+    callback open-last();
+}
+
+component DocumentCard inherits Card {
+    in property <string> title;
+    in property <string> description;
+    min-width: 260px;
+    preferred-width: 340px;
+    horizontal-stretch: 1;
+    Heading {
+        text: root.title;
+    }
+    Muted {
+        text: root.description;
+    }
+    @children
+}
+
+component Labelled inherits VerticalLayout {
+    in property <string> label;
+    spacing: 4px;
+    Muted {
+        text: root.label;
+    }
+    @children
+}
+
+export component DocumentsView inherits Rectangle {
+    ScrollView {
+        VerticalLayout {
+            width: parent.visible-width;
+            padding: Theme.page-padding;
+            spacing: 16px;
+            alignment: start;
+            PageHeader {
+                title: "Dokumente";
+                subtitle: "PDFs werden im Ablageordner gespeichert – je Mitarbeiter ein Unterordner „Personalnummer Nachname“.";
+            }
+            FlexboxLayout {
+                spacing: 16px;
+                alignment: stretch;
+                cross-axis-alignment: stretch;
+                DocumentCard {
+                    title: "Lohnabrechnung";
+                    description: "Monatliche Abrechnung eines bereits erfassten Monats (erneut) erstellen.";
+                    Labelled {
+                        label: "Mitarbeiter";
+                        ComboBox {
+                            model: DocumentsPage.employees;
+                            current-index <=> DocumentsPage.payslip-employee;
+                        }
+                    }
+                    Labelled {
+                        label: "Monat";
+                        HorizontalLayout {
+                            spacing: 8px;
+                            ComboBox {
+                                model: DocumentsPage.months;
+                                current-index <=> DocumentsPage.payslip-month;
+                                horizontal-stretch: 2;
+                            }
+                            ComboBox {
+                                model: DocumentsPage.years;
+                                current-index <=> DocumentsPage.payslip-year;
+                                horizontal-stretch: 1;
+                            }
+                        }
+                    }
+                    Rectangle {
+                        vertical-stretch: 1;
+                    }
+                    Button {
+                        text: "Lohnabrechnung erstellen";
+                        primary: true;
+                        clicked => {
+                            DocumentsPage.create-payslip();
+                        }
+                    }
+                }
+                DocumentCard {
+                    title: "Jahresjournale";
+                    description: "Lohnjournal (Bezüge und Beiträge) und Zeitjournal (Stunden, Urlaub, Krankheit) für ein ganzes Jahr.";
+                    Labelled {
+                        label: "Mitarbeiter";
+                        ComboBox {
+                            model: DocumentsPage.journal-employees;
+                            current-index <=> DocumentsPage.journal-employee;
+                        }
+                    }
+                    Labelled {
+                        label: "Jahr";
+                        ComboBox {
+                            model: DocumentsPage.years;
+                            current-index <=> DocumentsPage.journal-year;
+                        }
+                    }
+                    Rectangle {
+                        vertical-stretch: 1;
+                    }
+                    HorizontalLayout {
+                        spacing: 8px;
+                        Button {
+                            text: "Lohnjournal";
+                            primary: true;
+                            horizontal-stretch: 1;
+                            clicked => {
+                                DocumentsPage.create-payroll-journal();
+                            }
+                        }
+                        Button {
+                            text: "Zeitjournal";
+                            primary: true;
+                            horizontal-stretch: 1;
+                            clicked => {
+                                DocumentsPage.create-time-journal();
+                            }
+                        }
+                    }
+                }
+            }
+            Card {
+                Heading {
+                    text: "Ablageordner";
+                }
+                Text {
+                    text: DocumentsPage.folder;
+                    color: Theme.text;
+                    wrap: word-wrap;
+                }
+                if DocumentsPage.last-file != "": Muted {
+                    text: "Zuletzt erstellt: " + DocumentsPage.last-file;
+                }
+                FlexboxLayout {
+                    spacing: 8px;
+                    Button {
+                        text: "Ordner öffnen";
+                        clicked => {
+                            DocumentsPage.open-folder();
+                        }
+                    }
+                    Button {
+                        text: "Ordner ändern …";
+                        clicked => {
+                            DocumentsPage.change-folder();
+                        }
+                    }
+                    if DocumentsPage.last-file != "": Button {
+                        text: "Letzte PDF öffnen";
+                        clicked => {
+                            DocumentsPage.open-last();
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

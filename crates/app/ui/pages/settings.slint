@@ -1,0 +1,181 @@
+import { Button, LineEdit, Switch, ScrollView } from "std-widgets.slint";
+import { Theme } from "../theme.slint";
+import { FormSection } from "../state.slint";
+import { Card, PageHeader, Heading, Muted, SectionView } from "../widgets.slint";
+
+export global SettingsPage {
+    // This computer
+    in property <string> pdf-folder;
+    in-out property <bool> open-after-create;
+    in-out property <bool> check-updates;
+    // Shared defaults (database)
+    in property <FormSection> defaults;
+    in property <string> defaults-error;
+    // Account
+    in property <string> email;
+    in-out property <string> new-password;
+    in-out property <string> repeat-password;
+    in property <string> password-error;
+    // Connection
+    in property <string> connection-url;
+    in property <string> log-file;
+    callback change-folder();
+    callback open-folder();
+    callback local-changed();
+    callback defaults-edited(key: string, value: string);
+    callback save-defaults();
+    callback change-password();
+    callback change-connection();
+    callback open-log();
+}
+
+component ErrorText inherits Text {
+    color: Theme.error;
+    wrap: word-wrap;
+    font-size: Theme.font-small;
+}
+
+export component SettingsView inherits Rectangle {
+    ScrollView {
+        VerticalLayout {
+            width: parent.visible-width;
+            padding: Theme.page-padding;
+            spacing: 16px;
+            alignment: start;
+            PageHeader {
+                title: "Einstellungen";
+            }
+            FlexboxLayout {
+                spacing: 16px;
+                alignment: stretch;
+                cross-axis-alignment: stretch;
+                Card {
+                    min-width: 300px;
+                    preferred-width: 420px;
+                    horizontal-stretch: 1;
+                    Heading {
+                        text: "Dieser Computer";
+                    }
+                    Muted {
+                        text: "Ablageordner für PDFs (z. B. ein Netzlaufwerk):";
+                    }
+                    Text {
+                        text: SettingsPage.pdf-folder;
+                        color: Theme.text;
+                        wrap: word-wrap;
+                    }
+                    FlexboxLayout {
+                        spacing: 8px;
+                        Button {
+                            text: "Ordner ändern …";
+                            clicked => {
+                                SettingsPage.change-folder();
+                            }
+                        }
+                        Button {
+                            text: "Ordner öffnen";
+                            clicked => {
+                                SettingsPage.open-folder();
+                            }
+                        }
+                    }
+                    Switch {
+                        text: "PDF nach dem Erstellen öffnen";
+                        checked <=> SettingsPage.open-after-create;
+                        toggled => {
+                            SettingsPage.local-changed();
+                        }
+                    }
+                    Switch {
+                        text: "Beim Start nach Updates suchen";
+                        checked <=> SettingsPage.check-updates;
+                        toggled => {
+                            SettingsPage.local-changed();
+                        }
+                    }
+                }
+                Card {
+                    min-width: 300px;
+                    preferred-width: 420px;
+                    horizontal-stretch: 1;
+                    Heading {
+                        text: "Benutzerkonto";
+                    }
+                    Muted {
+                        text: "Angemeldet als " + SettingsPage.email;
+                    }
+                    Muted {
+                        text: "Neues Passwort (mindestens 8 Zeichen):";
+                    }
+                    LineEdit {
+                        text <=> SettingsPage.new-password;
+                        input-type: password;
+                        placeholder-text: "Neues Passwort";
+                    }
+                    LineEdit {
+                        text <=> SettingsPage.repeat-password;
+                        input-type: password;
+                        placeholder-text: "Wiederholen";
+                    }
+                    if SettingsPage.password-error != "": ErrorText {
+                        text: SettingsPage.password-error;
+                    }
+                    HorizontalLayout {
+                        alignment: start;
+                        Button {
+                            text: "Passwort ändern";
+                            clicked => {
+                                SettingsPage.change-password();
+                            }
+                        }
+                    }
+                }
+            }
+            SectionView {
+                section: SettingsPage.defaults;
+                edited(key, value) => {
+                    SettingsPage.defaults-edited(key, value);
+                }
+                if SettingsPage.defaults-error != "": ErrorText {
+                    text: SettingsPage.defaults-error;
+                }
+                HorizontalLayout {
+                    alignment: end;
+                    Button {
+                        text: "Standardwerte speichern";
+                        primary: true;
+                        clicked => {
+                            SettingsPage.save-defaults();
+                        }
+                    }
+                }
+            }
+            Card {
+                Heading {
+                    text: "Datenbank";
+                }
+                Muted {
+                    text: "Verbunden mit " + SettingsPage.connection-url;
+                }
+                Muted {
+                    text: "Protokolldatei: " + SettingsPage.log-file;
+                }
+                FlexboxLayout {
+                    spacing: 8px;
+                    Button {
+                        text: "Verbindung ändern …";
+                        clicked => {
+                            SettingsPage.change-connection();
+                        }
+                    }
+                    Button {
+                        text: "Protokoll öffnen";
+                        clicked => {
+                            SettingsPage.open-log();
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

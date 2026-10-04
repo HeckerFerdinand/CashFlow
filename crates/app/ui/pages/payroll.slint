@@ -1,0 +1,142 @@
+import { Button, ScrollView } from "std-widgets.slint";
+import { Theme } from "../theme.slint";
+import { FormSection, KeyValueItem } from "../state.slint";
+import { Card, PageHeader, FormView, SelectionBar, SummaryCard, InfoBox, EmptyState, ErrorBox } from "../widgets.slint";
+
+export global PayrollPage {
+    in property <[string]> employees;
+    in-out property <int> employee-index: -1;
+    in property <[string]> months;
+    in-out property <int> month-index;
+    in property <[string]> years;
+    in-out property <int> year-index;
+    in property <bool> ready;
+    in property <bool> exists;
+    in property <string> status;
+    in property <string> hint;
+    in property <string> error;
+    in property <[FormSection]> form;
+    in property <[KeyValueItem]> info;
+    in property <[KeyValueItem]> calculation;
+    callback employee-changed(index: int);
+    callback period-changed(month-index: int, year-index: int);
+    callback edited(key: string, value: string);
+    callback save();
+    callback save-and-print();
+    callback print();
+    callback delete();
+}
+
+component PayrollForm inherits VerticalLayout {
+    spacing: 12px;
+    InfoBox {
+        text: PayrollPage.status;
+        warning: PayrollPage.exists;
+    }
+    if PayrollPage.hint != "": InfoBox {
+        text: PayrollPage.hint;
+    }
+    if PayrollPage.error != "": ErrorBox {
+        text: PayrollPage.error;
+    }
+    FormView {
+        sections: PayrollPage.form;
+        edited(key, value) => {
+            PayrollPage.edited(key, value);
+        }
+    }
+    HorizontalLayout {
+        spacing: 8px;
+        alignment: end;
+        if PayrollPage.exists: Button {
+            text: "Löschen";
+            clicked => {
+                PayrollPage.delete();
+            }
+        }
+        if PayrollPage.exists: Button {
+            text: "Nur PDF";
+            clicked => {
+                PayrollPage.print();
+            }
+        }
+        Button {
+            text: "Speichern";
+            clicked => {
+                PayrollPage.save();
+            }
+        }
+        Button {
+            text: "Speichern & PDF";
+            primary: true;
+            clicked => {
+                PayrollPage.save-and-print();
+            }
+        }
+    }
+}
+
+component PayrollSummary inherits VerticalLayout {
+    spacing: 12px;
+    alignment: start;
+    SummaryCard {
+        title: "Berechnung";
+        lines: PayrollPage.calculation;
+    }
+    SummaryCard {
+        title: "Stammdaten";
+        lines: PayrollPage.info;
+    }
+}
+
+export component PayrollView inherits Rectangle {
+    property <bool> wide: root.width >= 900px;
+    ScrollView {
+        VerticalLayout {
+            width: parent.visible-width;
+            padding: Theme.page-padding;
+            spacing: 16px;
+            alignment: start;
+            PageHeader {
+                title: "Lohnerfassung";
+                subtitle: "Monatliche Bezüge erfassen; die Beiträge werden automatisch berechnet.";
+            }
+            SelectionBar {
+                employees: PayrollPage.employees;
+                employee-index <=> PayrollPage.employee-index;
+                months: PayrollPage.months;
+                month-index <=> PayrollPage.month-index;
+                years: PayrollPage.years;
+                year-index <=> PayrollPage.year-index;
+                employee-changed(index) => {
+                    PayrollPage.employee-changed(index);
+                }
+                period-changed(month, year) => {
+                    PayrollPage.period-changed(month, year);
+                }
+            }
+            if !PayrollPage.ready: Card {
+                EmptyState {
+                    title: "Mitarbeiter wählen";
+                    text: PayrollPage.employees.length == 0 ? "Es gibt noch keine Mitarbeiter. Lege sie unter „Mitarbeiter“ an." : "Wähle oben Mitarbeiter und Monat.";
+                }
+            }
+            if PayrollPage.ready && root.wide: HorizontalLayout {
+                spacing: 16px;
+                PayrollForm {
+                    horizontal-stretch: 3;
+                }
+                PayrollSummary {
+                    horizontal-stretch: 2;
+                    min-width: 280px;
+                    max-width: 440px;
+                }
+            }
+            if PayrollPage.ready && !root.wide: VerticalLayout {
+                spacing: 16px;
+                PayrollForm { }
+                PayrollSummary { }
+            }
+        }
+    }
+}

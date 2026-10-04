@@ -1,0 +1,249 @@
+import { Button, ScrollView } from "std-widgets.slint";
+import { Theme } from "../theme.slint";
+import { Card, PageHeader, EmptyState, Muted, Heading } from "../widgets.slint";
+
+export struct MonthCell {
+    payroll: bool,
+    time: bool,
+    // false: the employee was not employed in this month
+    active: bool,
+}
+
+export struct OverviewRow {
+    id: string,
+    name: string,
+    subtitle: string,
+    months: [MonthCell],
+}
+
+export struct OverviewStat {
+    label: string,
+    value: string,
+    detail: string,
+}
+
+export global OverviewPage {
+    in property <string> year;
+    in property <[string]> month-headers;
+    // Index of the current month (-1 if another year is shown).
+    in property <int> current-month: -1;
+    in property <[OverviewRow]> rows;
+    in property <[OverviewStat]> stats;
+    callback previous-year();
+    callback next-year();
+    // kind: 0 = wage entry, 1 = time entry
+    callback open(employee-id: string, month: int, kind: int);
+}
+
+component Marker inherits Rectangle {
+    in property <bool> filled;
+    in property <bool> active;
+    in property <color> tint;
+    callback clicked();
+    width: 13px;
+    height: 13px;
+    border-radius: 3px;
+    border-width: 1.5px;
+    border-color: root.active ? root.tint : Theme.border;
+    background: root.filled ? root.tint : touch.has-hover && root.active ? root.tint.with-alpha(0.25) : transparent;
+    touch := TouchArea {
+        enabled: root.active;
+        mouse-cursor: root.active ? pointer : default;
+        clicked => {
+            root.clicked();
+        }
+    }
+}
+
+component StatCard inherits Card {
+    in property <OverviewStat> stat;
+    min-width: 180px;
+    horizontal-stretch: 1;
+    pad: 14px;
+    gap: 2px;
+    Muted {
+        text: root.stat.label;
+    }
+    Text {
+        text: root.stat.value;
+        font-size: 24px;
+        font-weight: 700;
+        color: Theme.text;
+    }
+    Muted {
+        text: root.stat.detail;
+    }
+}
+
+export component OverviewView inherits Rectangle {
+    ScrollView {
+        VerticalLayout {
+            width: parent.visible-width;
+            padding: Theme.page-padding;
+            spacing: 16px;
+            alignment: start;
+            PageHeader {
+                title: "Übersicht";
+                subtitle: "Welche Monate sind abgerechnet? Ein Klick auf ein Feld öffnet die Erfassung.";
+                HorizontalLayout {
+                    spacing: 6px;
+                    alignment: end;
+                    Button {
+                        text: "◀";
+                        clicked => {
+                            OverviewPage.previous-year();
+                        }
+                    }
+                    Text {
+                        text: OverviewPage.year;
+                        font-size: 20px;
+                        font-weight: 700;
+                        vertical-alignment: center;
+                        horizontal-alignment: center;
+                        min-width: 64px;
+                        color: Theme.text;
+                    }
+                    Button {
+                        text: "▶";
+                        clicked => {
+                            OverviewPage.next-year();
+                        }
+                    }
+                }
+            }
+            FlexboxLayout {
+                spacing: 12px;
+                alignment: stretch;
+                for stat in OverviewPage.stats: StatCard {
+                    stat: stat;
+                }
+            }
+            Card {
+                pad: 14px;
+                gap: 0px;
+                HorizontalLayout {
+                    spacing: 18px;
+                    padding-bottom: 10px;
+                    Heading {
+                        text: "Erfassung " + OverviewPage.year;
+                        horizontal-stretch: 1;
+                    }
+                    HorizontalLayout {
+                        spacing: 6px;
+                        horizontal-stretch: 0;
+                        Rectangle {
+                            width: 12px;
+                            height: 12px;
+                            y: 4px;
+                            border-radius: 3px;
+                            background: Theme.payroll;
+                        }
+                        Muted {
+                            text: "Lohn";
+                            vertical-alignment: center;
+                        }
+                    }
+                    HorizontalLayout {
+                        spacing: 6px;
+                        horizontal-stretch: 0;
+                        Rectangle {
+                            width: 12px;
+                            height: 12px;
+                            y: 4px;
+                            border-radius: 3px;
+                            background: Theme.time;
+                        }
+                        Muted {
+                            text: "Zeit";
+                            vertical-alignment: center;
+                        }
+                    }
+                }
+                if OverviewPage.rows.length == 0: EmptyState {
+                    title: "Keine Mitarbeiter in " + OverviewPage.year;
+                    text: "Mitarbeiter werden angezeigt, wenn sie im gewählten Jahr beschäftigt waren.";
+                }
+                if OverviewPage.rows.length > 0: VerticalLayout {
+                    // Header row
+                    HorizontalLayout {
+                        padding-top: 4px;
+                        padding-bottom: 6px;
+                        spacing: 2px;
+                        Rectangle {
+                            min-width: 110px;
+                            preferred-width: 230px;
+                            horizontal-stretch: 2;
+                        }
+                        for header[index] in OverviewPage.month-headers: Rectangle {
+                            min-width: 33px;
+                            horizontal-stretch: 1;
+                            border-radius: 4px;
+                            background: index == OverviewPage.current-month ? Theme.brand-light : transparent;
+                            Text {
+                                text: header;
+                                font-size: 11px;
+                                font-weight: 600;
+                                color: index == OverviewPage.current-month ? Theme.brand-dark : Theme.text-muted;
+                                horizontal-alignment: center;
+                            }
+                        }
+                    }
+                    for row in OverviewPage.rows: Rectangle {
+                        border-width: 0px;
+                        HorizontalLayout {
+                            spacing: 2px;
+                            padding-top: 6px;
+                            padding-bottom: 6px;
+                            VerticalLayout {
+                                min-width: 110px;
+                                preferred-width: 230px;
+                                horizontal-stretch: 2;
+                                alignment: center;
+                                Text {
+                                    text: row.name;
+                                    color: Theme.text;
+                                    overflow: elide;
+                                }
+                                Text {
+                                    text: row.subtitle;
+                                    color: Theme.text-muted;
+                                    font-size: 11px;
+                                    overflow: elide;
+                                }
+                            }
+                            for cell[month] in row.months: HorizontalLayout {
+                                min-width: 33px;
+                                horizontal-stretch: 1;
+                                alignment: center;
+                                spacing: 3px;
+                                padding-top: 4px;
+                                padding-bottom: 4px;
+                                Marker {
+                                    filled: cell.payroll;
+                                    active: cell.active;
+                                    tint: Theme.payroll;
+                                    clicked => {
+                                        OverviewPage.open(row.id, month, 0);
+                                    }
+                                }
+                                Marker {
+                                    filled: cell.time;
+                                    active: cell.active;
+                                    tint: Theme.time;
+                                    clicked => {
+                                        OverviewPage.open(row.id, month, 1);
+                                    }
+                                }
+                            }
+                        }
+                        Rectangle {
+                            y: parent.height - 1px;
+                            height: 1px;
+                            background: Theme.border;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

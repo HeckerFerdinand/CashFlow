@@ -1,0 +1,119 @@
+import { Button, ScrollView } from "std-widgets.slint";
+import { Theme } from "../theme.slint";
+import { FormSection, KeyValueItem } from "../state.slint";
+import { Card, PageHeader, FormView, SelectionBar, SummaryCard, InfoBox, EmptyState, ErrorBox } from "../widgets.slint";
+
+export global TimePage {
+    in property <[string]> employees;
+    in-out property <int> employee-index: -1;
+    in property <[string]> months;
+    in-out property <int> month-index;
+    in property <[string]> years;
+    in-out property <int> year-index;
+    in property <bool> ready;
+    in property <bool> exists;
+    in property <string> status;
+    in property <string> error;
+    in property <[FormSection]> form;
+    in property <[KeyValueItem]> summary;
+    callback employee-changed(index: int);
+    callback period-changed(month-index: int, year-index: int);
+    callback edited(key: string, value: string);
+    callback save();
+    callback delete();
+}
+
+component TimeForm inherits VerticalLayout {
+    spacing: 12px;
+    InfoBox {
+        text: TimePage.status;
+        warning: TimePage.exists;
+    }
+    if TimePage.error != "": ErrorBox {
+        text: TimePage.error;
+    }
+    FormView {
+        sections: TimePage.form;
+        edited(key, value) => {
+            TimePage.edited(key, value);
+        }
+    }
+    HorizontalLayout {
+        spacing: 8px;
+        alignment: end;
+        if TimePage.exists: Button {
+            text: "Löschen";
+            clicked => {
+                TimePage.delete();
+            }
+        }
+        Button {
+            text: "Speichern";
+            primary: true;
+            clicked => {
+                TimePage.save();
+            }
+        }
+    }
+}
+
+export component TimeView inherits Rectangle {
+    property <bool> wide: root.width >= 900px;
+    ScrollView {
+        VerticalLayout {
+            width: parent.visible-width;
+            padding: Theme.page-padding;
+            spacing: 16px;
+            alignment: start;
+            PageHeader {
+                title: "Zeiterfassung";
+                subtitle: "Arbeitsstunden, Regiestunden, Urlaubs- und Krankheitstage pro Monat.";
+            }
+            SelectionBar {
+                employees: TimePage.employees;
+                employee-index <=> TimePage.employee-index;
+                months: TimePage.months;
+                month-index <=> TimePage.month-index;
+                years: TimePage.years;
+                year-index <=> TimePage.year-index;
+                employee-changed(index) => {
+                    TimePage.employee-changed(index);
+                }
+                period-changed(month, year) => {
+                    TimePage.period-changed(month, year);
+                }
+            }
+            if !TimePage.ready: Card {
+                EmptyState {
+                    title: "Mitarbeiter wählen";
+                    text: TimePage.employees.length == 0 ? "Es gibt noch keine Mitarbeiter. Lege sie unter „Mitarbeiter“ an." : "Wähle oben Mitarbeiter und Monat.";
+                }
+            }
+            if TimePage.ready && root.wide: HorizontalLayout {
+                spacing: 16px;
+                alignment: stretch;
+                TimeForm {
+                    horizontal-stretch: 3;
+                }
+                VerticalLayout {
+                    horizontal-stretch: 2;
+                    min-width: 260px;
+                    max-width: 420px;
+                    alignment: start;
+                    SummaryCard {
+                        title: "Zusammenfassung";
+                        lines: TimePage.summary;
+                    }
+                }
+            }
+            if TimePage.ready && !root.wide: VerticalLayout {
+                spacing: 16px;
+                TimeForm { }
+                SummaryCard {
+                    title: "Zusammenfassung";
+                    lines: TimePage.summary;
+                }
+            }
+        }
+    }
+}

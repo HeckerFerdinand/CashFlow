@@ -1,0 +1,126 @@
+import { Button, ScrollView, AboutSlint } from "std-widgets.slint";
+import { Theme } from "../theme.slint";
+import { AppState } from "../state.slint";
+import { Card, Heading, Muted } from "../widgets.slint";
+
+export global AboutPage {
+    in property <string> imprint;
+    in property <string> disclaimer;
+    in property <string> changelog;
+    in property <string> licenses;
+    in property <string> update-text;
+    in property <bool> update-available;
+    callback check-updates();
+    callback open-download();
+}
+
+export component AboutView inherits Rectangle {
+    ScrollView {
+        VerticalLayout {
+            width: parent.visible-width;
+            padding: Theme.page-padding;
+            spacing: 16px;
+            alignment: start;
+            Card {
+                HorizontalLayout {
+                    spacing: 16px;
+                    Image {
+                        source: @image-url("../../../../assets/logo.png");
+                        width: 56px;
+                        height: 64px;
+                        image-fit: contain;
+                    }
+                    VerticalLayout {
+                        alignment: center;
+                        horizontal-stretch: 1;
+                        Text {
+                            text: "CashFlow";
+                            font-size: 26px;
+                            font-weight: 700;
+                            color: Theme.brand;
+                        }
+                        Muted {
+                            text: "Version " + AppState.version + " · Lohnabrechnung für Minijobs";
+                        }
+                        if AboutPage.update-text != "": Text {
+                            text: AboutPage.update-text;
+                            color: AboutPage.update-available ? Theme.brand-dark : Theme.text-muted;
+                            font-weight: AboutPage.update-available ? 600 : 400;
+                            wrap: word-wrap;
+                        }
+                    }
+                    VerticalLayout {
+                        alignment: center;
+                        spacing: 6px;
+                        Button {
+                            text: "Nach Updates suchen";
+                            clicked => {
+                                AboutPage.check-updates();
+                            }
+                        }
+                        if AboutPage.update-available: Button {
+                            text: "Download öffnen";
+                            primary: true;
+                            clicked => {
+                                AboutPage.open-download();
+                            }
+                        }
+                    }
+                }
+            }
+            FlexboxLayout {
+                spacing: 16px;
+                alignment: stretch;
+                cross-axis-alignment: stretch;
+                Card {
+                    min-width: 280px;
+                    preferred-width: 380px;
+                    horizontal-stretch: 1;
+                    Heading {
+                        text: "Impressum";
+                    }
+                    Text {
+                        text: AboutPage.imprint;
+                        color: Theme.text;
+                        wrap: word-wrap;
+                    }
+                }
+                Card {
+                    min-width: 280px;
+                    preferred-width: 380px;
+                    horizontal-stretch: 1;
+                    Heading {
+                        text: "Änderungsprotokoll";
+                    }
+                    Text {
+                        text: AboutPage.changelog;
+                        color: Theme.text;
+                        wrap: word-wrap;
+                    }
+                }
+            }
+            Card {
+                Heading {
+                    text: "Haftungsausschluss";
+                }
+                Muted {
+                    text: AboutPage.disclaimer;
+                }
+            }
+            Card {
+                Heading {
+                    text: "Lizenzen";
+                }
+                Muted {
+                    text: AboutPage.licenses;
+                }
+                HorizontalLayout {
+                    alignment: start;
+                    AboutSlint {
+                        max-height: 180px;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,162 @@
+// List on the left, form on the right. On narrow windows only one of the
+// two is shown at a time.
+
+import { Button, LineEdit, ListView, ScrollView, CheckBox } from "std-widgets.slint";
+import { Theme } from "theme.slint";
+import { ListItem, FormSection } from "state.slint";
+import { Card, FormView, ListRow, EmptyState, Heading } from "widgets.slint";
+
+export component MasterDetail inherits Rectangle {
+    in property <string> list-title;
+    in property <string> empty-list-text;
+    in property <string> nothing-selected-text;
+    in property <string> filter-label;
+    in-out property <bool> filter-checked;
+    in property <[ListItem]> items;
+    in property <string> selected-id;
+    in property <bool> editing;
+    in property <bool> is-new;
+    in property <string> title;
+    in property <[FormSection]> form;
+    in property <string> error;
+    callback select(id: string);
+    callback create();
+    callback edited(key: string, value: string);
+    callback save();
+    callback discard();
+    callback delete();
+    callback search(text: string);
+    callback filter-toggled(checked: bool);
+
+    property <bool> narrow: root.width < 820px;
+
+    HorizontalLayout {
+        padding: Theme.page-padding;
+        spacing: 16px;
+        if !root.narrow || !root.editing: Card {
+            horizontal-stretch: root.narrow ? 1 : 0;
+            min-width: 240px;
+            preferred-width: 300px;
+            max-width: root.narrow ? 10000px : 330px;
+            pad: 12px;
+            gap: 10px;
+            HorizontalLayout {
+                spacing: 8px;
+                Heading {
+                    text: root.list-title;
+                    vertical-alignment: center;
+                    horizontal-stretch: 1;
+                }
+                Button {
+                    text: "Neu";
+                    primary: true;
+                    clicked => {
+                        root.create();
+                    }
+                }
+            }
+            LineEdit {
+                placeholder-text: "Suchen …";
+                edited(text) => {
+                    root.search(text);
+                }
+            }
+            if root.filter-label != "": CheckBox {
+                text: root.filter-label;
+                checked <=> root.filter-checked;
+                toggled => {
+                    root.filter-toggled(self.checked);
+                }
+            }
+            if root.items.length == 0: EmptyState {
+                title: "Keine Einträge";
+                text: root.empty-list-text;
+                vertical-stretch: 1;
+            }
+            if root.items.length > 0: ListView {
+                vertical-stretch: 1;
+                for item in root.items: ListRow {
+                    item: item;
+                    selected: item.id == root.selected-id;
+                    clicked => {
+                        root.select(item.id);
+                    }
+                }
+            }
+        }
+        if !root.narrow || root.editing: VerticalLayout {
+            horizontal-stretch: 1;
+            spacing: 12px;
+            if !root.editing: Card {
+                vertical-stretch: 1;
+                EmptyState {
+                    title: "Nichts ausgewählt";
+                    text: root.nothing-selected-text;
+                }
+            }
+            if root.editing: HorizontalLayout {
+                spacing: 8px;
+                if root.narrow: Button {
+                    text: "← Liste";
+                    clicked => {
+                        root.discard();
+                    }
+                }
+                Text {
+                    text: root.title;
+                    font-size: Theme.font-title;
+                    font-weight: 700;
+                    color: Theme.text;
+                    vertical-alignment: center;
+                    horizontal-stretch: 1;
+                    overflow: elide;
+                }
+                if !root.is-new: Button {
+                    text: "Löschen";
+                    clicked => {
+                        root.delete();
+                    }
+                }
+                Button {
+                    text: "Verwerfen";
+                    clicked => {
+                        root.discard();
+                    }
+                }
+                Button {
+                    text: "Speichern";
+                    primary: true;
+                    clicked => {
+                        root.save();
+                    }
+                }
+            }
+            if root.editing && root.error != "": Rectangle {
+                border-radius: 6px;
+                background: Theme.error-light;
+                HorizontalLayout {
+                    padding: 10px;
+                    Text {
+                        text: root.error;
+                        color: Theme.error;
+                        wrap: word-wrap;
+                    }
+                }
+            }
+            if root.editing: ScrollView {
+                vertical-stretch: 1;
+                VerticalLayout {
+                    width: parent.visible-width;
+                    padding-right: 4px;
+                    padding-bottom: 8px;
+                    FormView {
+                        sections: root.form;
+                        edited(key, value) => {
+                            root.edited(key, value);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

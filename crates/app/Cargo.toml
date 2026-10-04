@@ -1,0 +1,48 @@
+[package]
+name = "cashflow-app"
+description = "CashFlow desktop application (Slint UI)"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[lib]
+name = "cashflow_app"
+path = "src/lib.rs"
+
+[[bin]]
+name = "cashflow"
+path = "src/main.rs"
+
+[dependencies]
+cashflow-core.workspace = true
+cashflow-data.workspace = true
+cashflow-documents.workspace = true
+chrono.workspace = true
+directories = "6"
+keyring = "4"
+opener = { version = "0.9", features = ["reveal"] }
+reqwest.workspace = true
+rfd = "0.17"
+rust_decimal.workspace = true
+serde.workspace = true
+slint.workspace = true
+tokio.workspace = true
+toml = "1"
+tracing.workspace = true
+tracing-subscriber = { version = "0.3", features = ["fmt"] }
+uuid.workspace = true
+
+[dev-dependencies]
+jsonwebtoken = { version = "11", default-features = false, features = ["rust_crypto"] }
+rust_decimal_macros.workspace = true
+serde_json.workspace = true
+i-slint-backend-testing = { version = "=1.18.1", features = ["renderer-software"] }
+image = { version = "0.25", default-features = false, features = ["png"] }
+
+[build-dependencies]
+slint-build.workspace = true
+image = { version = "0.25", default-features = false, features = ["png", "ico"] }
+
+[target.'cfg(windows)'.build-dependencies]
+winresource = "0.1"

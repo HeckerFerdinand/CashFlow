@@ -1,0 +1,69 @@
+// Main window. Shows the login until signed in, then sidebar + current page.
+
+import { Palette } from "std-widgets.slint";
+import { Theme } from "theme.slint";
+import { Nav, Page, AppState, Notices, Confirm, ListItem, FormField, FormSection, FieldKind, Notice, NoticeKind, KeyValueItem } from "state.slint";
+import { Sidebar, BusyIndicator, NoticeStack, ConfirmDialog } from "shell.slint";
+import { LoginPage, LoginView } from "pages/login.slint";
+import { EmployersPage, EmployersView } from "pages/employers.slint";
+import { EmployeesPage, EmployeesView } from "pages/employees.slint";
+import { OverviewPage, OverviewView, MonthCell, OverviewRow, OverviewStat } from "pages/overview.slint";
+import { PayrollPage, PayrollView } from "pages/payroll.slint";
+import { TimePage, TimeView } from "pages/time.slint";
+import { DocumentsPage, DocumentsView } from "pages/documents.slint";
+import { SettingsPage, SettingsView } from "pages/settings.slint";
+import { AboutPage, AboutView } from "pages/about.slint";
+
+// Re-exported so the Rust side can access them.
+export { Nav, Page, AppState, Notices, Confirm, ListItem, FormField, FormSection, FieldKind, Notice, NoticeKind, KeyValueItem }
+export { LoginPage, EmployersPage, EmployeesPage, OverviewPage, MonthCell, OverviewRow, OverviewStat, PayrollPage, TimePage }
+export { DocumentsPage, SettingsPage, AboutPage }
+
+export component AppWindow inherits Window {
+    title: "CashFlow";
+    icon: @image-url("../../../assets/logo.png");
+    min-width: 820px;
+    min-height: 540px;
+    preferred-width: 1280px;
+    preferred-height: 800px;
+    background: Theme.background;
+    default-font-size: Theme.font-normal;
+
+    init => {
+        Palette.color-scheme = ColorScheme.light;
+    }
+
+    if !AppState.signed-in: LoginView { }
+
+    if AppState.signed-in: HorizontalLayout {
+        Sidebar { }
+        Rectangle {
+            horizontal-stretch: 1;
+            if Nav.page == Page.overview: OverviewView { }
+            if Nav.page == Page.payroll: PayrollView { }
+            if Nav.page == Page.time: TimeView { }
+            if Nav.page == Page.documents: DocumentsView { }
+            if Nav.page == Page.employees: EmployeesView { }
+            if Nav.page == Page.employers: EmployersView { }
+            if Nav.page == Page.settings: SettingsView { }
+            if Nav.page == Page.about: AboutView { }
+        }
+    }
+
+    BusyIndicator {
+        x: parent.width - self.width - 16px;
+        y: 12px;
+    }
+
+    NoticeStack {
+        width: min(380px, parent.width - 32px);
+        height: self.preferred-height;
+        x: parent.width - self.width - 16px;
+        y: parent.height - self.height - 16px;
+    }
+
+    if Confirm.open: ConfirmDialog {
+        width: parent.width;
+        height: parent.height;
+    }
+}

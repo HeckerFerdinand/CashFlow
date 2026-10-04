@@ -1,0 +1,53 @@
+import { ListItem, FormSection } from "../state.slint";
+import { MasterDetail } from "../master-detail.slint";
+
+export global EmployersPage {
+    in property <[ListItem]> items;
+    in property <string> selected-id;
+    in property <bool> editing;
+    in property <bool> is-new;
+    in property <string> title;
+    in property <[FormSection]> form;
+    in property <string> error;
+    callback select(id: string);
+    callback create();
+    callback edited(key: string, value: string);
+    callback save();
+    callback discard();
+    callback delete();
+    callback search(text: string);
+}
+
+export component EmployersView inherits MasterDetail {
+    list-title: "Arbeitgeber";
+    empty-list-text: "Lege mit „Neu“ den ersten Arbeitgeber an.";
+    nothing-selected-text: "Wähle links einen Arbeitgeber aus oder lege einen neuen an.";
+    items: EmployersPage.items;
+    selected-id: EmployersPage.selected-id;
+    editing: EmployersPage.editing;
+    is-new: EmployersPage.is-new;
+    title: EmployersPage.title;
+    form: EmployersPage.form;
+    error: EmployersPage.error;
+    select(id) => {
+        EmployersPage.select(id);
+    }
+    create => {
+        EmployersPage.create();
+    }
+    edited(key, value) => {
+        EmployersPage.edited(key, value);
+    }
+    save => {
+        EmployersPage.save();
+    }
+    discard => {
+        EmployersPage.discard();
+    }
+    delete => {
+        EmployersPage.delete();
+    }
+    search(text) => {
+        EmployersPage.search(text);
+    }
+}

@@ -1,0 +1,44 @@
+name: Release
+
+# Builds CashFlow.exe for Windows when a version tag (e.g. v2.0.0) is pushed.
+# Repository variables SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY (Settings →
+# Secrets and variables → Actions → Variables) are built into the app so users
+# only need to sign in. Leave them empty to ship an unconfigured build.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Build
+        env:
+          CASHFLOW_SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          CASHFLOW_SUPABASE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
+          # Static C runtime: no Visual C++ Redistributable needed on the target PC.
+          RUSTFLAGS: -C target-feature=+crt-static
+        run: cargo build --release -p cashflow-app --target x86_64-pc-windows-msvc
+      - name: Package
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force dist | Out-Null
+          Copy-Item target/x86_64-pc-windows-msvc/release/cashflow.exe dist/CashFlow.exe
+          Copy-Item README.md, CHANGELOG.md dist/
+          Compress-Archive -Path dist/* -DestinationPath CashFlow-windows-x64.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CashFlow-windows-x64
+          path: CashFlow-windows-x64.zip
+      - uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: CashFlow-windows-x64.zip

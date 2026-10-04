@@ -1,0 +1,138 @@
+import { LineEdit, Button, CheckBox } from "std-widgets.slint";
+import { Theme } from "../theme.slint";
+import { Card, Muted } from "../widgets.slint";
+
+export global LoginPage {
+    in-out property <string> email;
+    in-out property <string> password;
+    in-out property <bool> remember: true;
+    in property <string> error;
+    in property <bool> working;
+    // Connection to the Supabase project (needed once per computer).
+    in-out property <bool> show-connection;
+    in-out property <string> url;
+    in-out property <string> api-key;
+    callback sign-in();
+    callback save-connection();
+}
+
+export component LoginView inherits Rectangle {
+    background: Theme.background;
+    VerticalLayout {
+        alignment: center;
+        padding: 24px;
+        HorizontalLayout {
+            alignment: center;
+            Card {
+                width: min(420px, root.width - 48px);
+                pad: 28px;
+                gap: 14px;
+                HorizontalLayout {
+                    spacing: 12px;
+                    Image {
+                        source: @image-url("../../../../assets/logo.png");
+                        width: 40px;
+                        height: 46px;
+                        image-fit: contain;
+                    }
+                    VerticalLayout {
+                        alignment: center;
+                        Text {
+                            text: "CashFlow";
+                            font-size: 26px;
+                            font-weight: 700;
+                            color: Theme.brand;
+                        }
+                        Muted {
+                            text: "Lohnabrechnung für Minijobs";
+                        }
+                    }
+                }
+                Text {
+                    text: "E-Mail-Adresse";
+                    font-size: Theme.font-small;
+                    color: Theme.text-muted;
+                }
+                email-input := LineEdit {
+                    text <=> LoginPage.email;
+                    placeholder-text: "name@beispiel.de";
+                    enabled: !LoginPage.working;
+                    accepted => {
+                        password-input.focus();
+                    }
+                }
+                Text {
+                    text: "Passwort";
+                    font-size: Theme.font-small;
+                    color: Theme.text-muted;
+                }
+                password-input := LineEdit {
+                    text <=> LoginPage.password;
+                    input-type: password;
+                    enabled: !LoginPage.working;
+                    accepted => {
+                        LoginPage.sign-in();
+                    }
+                }
+                CheckBox {
+                    text: "Angemeldet bleiben";
+                    checked <=> LoginPage.remember;
+                    enabled: !LoginPage.working;
+                }
+                if LoginPage.error != "": Rectangle {
+                    border-radius: 6px;
+                    background: Theme.error-light;
+                    HorizontalLayout {
+                        padding: 10px;
+                        Text {
+                            text: LoginPage.error;
+                            color: Theme.error;
+                            wrap: word-wrap;
+                        }
+                    }
+                }
+                Button {
+                    text: LoginPage.working ? "Anmelden …" : "Anmelden";
+                    primary: true;
+                    enabled: !LoginPage.working;
+                    clicked => {
+                        LoginPage.sign-in();
+                    }
+                }
+                TouchArea {
+                    height: 22px;
+                    mouse-cursor: pointer;
+                    clicked => {
+                        LoginPage.show-connection = !LoginPage.show-connection;
+                    }
+                    Text {
+                        text: LoginPage.show-connection ? "▾ Verbindung zur Datenbank" : "▸ Verbindung zur Datenbank";
+                        color: Theme.brand;
+                        font-size: Theme.font-small;
+                        width: 100%;
+                    }
+                }
+                if LoginPage.show-connection: VerticalLayout {
+                    spacing: 8px;
+                    Muted {
+                        text: "Projekt-URL und „Publishable key“ aus dem Supabase-Dashboard (Project Settings → API).";
+                    }
+                    LineEdit {
+                        text <=> LoginPage.url;
+                        placeholder-text: "https://xxxx.supabase.co";
+                    }
+                    LineEdit {
+                        text <=> LoginPage.api-key;
+                        placeholder-text: "sb_publishable_…";
+                    }
+                    Button {
+                        text: "Verbindung speichern";
+                        clicked => {
+                            LoginPage.save-connection();
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
