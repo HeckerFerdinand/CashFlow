@@ -150,12 +150,13 @@ fn save_connection(app: &Rc<App>) {
     let page = ui.global::<LoginPage>();
     let settings = ConnectionSettings::new(page.get_url().trim(), page.get_api_key().trim());
     match settings.validated_base_url() {
-        Ok(_) => {
+        Ok(base_url) => {
             {
                 let mut config = app.config.borrow_mut();
-                config.supabase_url = settings.url.clone();
+                config.supabase_url = base_url.clone();
                 config.supabase_key = settings.api_key.clone();
             }
+            page.set_url(base_url.into());
             app.save_config();
             page.set_error("".into());
             page.set_show_connection(false);

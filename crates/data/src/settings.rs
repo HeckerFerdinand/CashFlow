@@ -23,7 +23,13 @@ impl ConnectionSettings {
 
     /// Checks the settings and returns the normalized project URL (no trailing slash).
     pub fn validated_base_url(&self) -> Result<String> {
-        let url = self.url.trim().trim_end_matches('/');
+        let mut url = self.url.trim().trim_end_matches('/');
+        // Accept API addresses copied from the dashboard (".../rest/v1/").
+        for suffix in ["/rest/v1", "/auth/v1"] {
+            if let Some(base) = url.strip_suffix(suffix) {
+                url = base.trim_end_matches('/');
+            }
+        }
         if url.is_empty() {
             return Err(DataError::NotConfigured("Projekt-URL fehlt.".into()));
         }
@@ -59,6 +65,8 @@ mod tests {
     fn normalizes_and_validates() {
         let ok = ConnectionSettings::new(" https://abc.supabase.co/ ", "sb_publishable_x");
         assert_eq!(ok.validated_base_url().unwrap(), "https://abc.supabase.co");
+        let rest = ConnectionSettings::new("https://abc.supabase.co/rest/v1/", "sb_publishable_x");
+        assert_eq!(rest.validated_base_url().unwrap(), "https://abc.supabase.co");
         assert!(ConnectionSettings::new("http://127.0.0.1:54330", "k").validated_base_url().is_ok());
         assert!(ConnectionSettings::new("http://abc.supabase.co", "k").validated_base_url().is_err());
         assert!(ConnectionSettings::new("", "k").validated_base_url().is_err());

@@ -6,7 +6,8 @@ name: Release
 #   attached to a new GitHub release. The download link
 #   https://github.com/HeckerFerdinand/CashFlow/releases/latest/download/CashFlow-Setup.exe
 #   then always points to the newest installer.
-# - "Run workflow" (Actions tab): test build, files only as workflow artifact.
+# - Push to master or rust-rewrite (code changes) or "Run workflow": test
+#   build, files only as workflow artifact (Actions → run → Artifacts).
 #
 # Repository variables SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY
 # (Settings → Secrets and variables → Actions → Variables) are built into the
@@ -16,6 +17,14 @@ name: Release
 on:
   push:
     tags: ["v*"]
+    branches: [master, rust-rewrite]
+    paths:
+      - "crates/**"
+      - "assets/**"
+      - "packaging/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - ".github/workflows/release.yml"
   workflow_dispatch:
 
 permissions:
