@@ -73,7 +73,7 @@ mod tests {
     #[test]
     fn changelog_is_readable() {
         let text = super::plain_changelog();
-        assert!(text.starts_with("2.0.0"));
+        assert!(text.starts_with(env!("CARGO_PKG_VERSION")), "newest changelog entry must match the version");
         assert!(text.contains("• Beta-Release"));
         assert!(!text.contains("##"));
         assert!(text.contains("Lohn- und Zeiterfassung"), "hyphens inside text stay");

@@ -1,5 +1,8 @@
 # Änderungsprotokoll
 
+## 2.0.1 – Oktober 2026
+- macOS: Beenden mit Cmd+Q, über das App-Menü oder das Dock fragt jetzt nach, wenn es ungespeicherte Änderungen gibt
+
 ## 2.0.0 – Oktober 2026
 - Komplett neu entwickelt in Rust mit Slint: Oberfläche passt sich jeder Bildschirmgröße an
 - Neue Supabase-Datenbank mit Anmeldung und Zugriffsschutz (Row Level Security)

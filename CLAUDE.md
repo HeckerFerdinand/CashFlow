@@ -47,6 +47,7 @@ Without `CASHFLOW_TEST_REST_URL` the integration tests print a note and pass. Th
 - Forms: don't rebuild a form model while the user types (it recreates the `LineEdit`s and drops focus). Update only derived models (e.g. the payroll calculation), rebuild the form on load/save.
 - Avoid a page-level `FlexboxLayout` whose items contain word-wrapping text and depend on its height: it hit a Slint layout recursion panic (see payroll/time pages, which switch between `HorizontalLayout`/`VerticalLayout` at 900px instead).
 - Never run blocking work (network, Typst) on the UI thread; use `app.run*` (`spawn_blocking` for rendering).
+- macOS: ⌘Q, the app menu and the Dock call `-[NSApplication terminate:]`, which bypasses `on_close_requested`. `src/macos.rs` adds `applicationShouldTerminate:` to winit's `WinitApplicationDelegate` class at runtime; after Slint/winit upgrades, check `cashflow.log` for its warning (class renamed or method already implemented).
 - Only the Supabase *publishable* key may be in the app; `ConnectionSettings` rejects `sb_secret_…`.
 - Use the `Cf*` controls, not the std-widgets `Button`/`LineEdit`/`ComboBox`/`CheckBox`/`Switch`: the std widgets take the OS accent color (blue) and cannot be re-themed.
 - Gradients: two color stops only, and no `drop-shadow` on elements inside `clip: true` containers – the software renderer (screenshots) draws seams/lines otherwise. Give clipped header bands their own corner radii.

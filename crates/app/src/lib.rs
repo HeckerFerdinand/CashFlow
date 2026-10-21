@@ -9,6 +9,8 @@ mod config;
 mod context;
 mod forms;
 mod keychain;
+#[cfg(target_os = "macos")]
+mod macos;
 mod output;
 mod pages;
 mod selection;
@@ -28,28 +30,44 @@ pub fn run() -> Result<(), Box<dyn std::error::Error>> {
 
     let app = context::App::new(&window, runtime.handle().clone(), config::Config::load());
     pages::install(&app);
+    install_quit_handling(&app, &window);
     pages::login::try_resume(&app);
-
-    let weak = Rc::downgrade(&app);
-    window.window().on_close_requested(move || {
-        let Some(app) = weak.upgrade() else { return CloseRequestResponse::HideWindow };
-        if !pages::any_unsaved_changes() {
-            return CloseRequestResponse::HideWindow;
-        }
-        app.confirm(
-            "CashFlow beenden?",
-            "Es gibt ungespeicherte Änderungen. Trotzdem beenden und die Änderungen verwerfen?",
-            "Beenden",
-            |_| {
-                let _ = slint::quit_event_loop();
-            },
-        );
-        CloseRequestResponse::KeepWindowShown
-    });
 
     window.run()?;
     tracing::info!("CashFlow closed");
     Ok(())
+}
+
+/// Closing the window (and on macOS also ⌘Q, the app menu and the Dock)
+/// asks first while there are unsaved changes.
+fn install_quit_handling(app: &Rc<context::App>, window: &ui::AppWindow) {
+    let weak = Rc::downgrade(app);
+    window.window().on_close_requested(move || match weak.upgrade() {
+        Some(app) if !may_quit(&app) => CloseRequestResponse::KeepWindowShown,
+        _ => CloseRequestResponse::HideWindow,
+    });
+    #[cfg(target_os = "macos")]
+    {
+        let weak = Rc::downgrade(app);
+        macos::intercept_quit(move || weak.upgrade().is_none_or(|app| may_quit(&app)));
+    }
+}
+
+/// Whether CashFlow may close right away. With unsaved changes it asks
+/// instead and quits the event loop itself if the user agrees.
+fn may_quit(app: &Rc<context::App>) -> bool {
+    if !pages::any_unsaved_changes() {
+        return true;
+    }
+    app.confirm(
+        "CashFlow beenden?",
+        "Es gibt ungespeicherte Änderungen. Trotzdem beenden und die Änderungen verwerfen?",
+        "Beenden",
+        |_| {
+            let _ = slint::quit_event_loop();
+        },
+    );
+    false
 }
 
 /// Logs to `cashflow.log` in the app's data folder (shown on the Info page).
@@ -96,6 +114,7 @@ pub mod testing {
         };
         let app = context::App::new(window, runtime, config);
         pages::install(&app);
+        install_quit_handling(&app, window);
         pages::login::enter_app(&app, db, "demo@cashflow.local".into());
         app
     }

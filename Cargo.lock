@@ -799,7 +799,7 @@ dependencies = [
 
 [[package]]
 name = "cashflow-app"
-version = "2.0.0"
+version = "2.0.1"
 dependencies = [
  "cashflow-core",
  "cashflow-data",
@@ -810,6 +810,7 @@ dependencies = [
  "image",
  "jsonwebtoken",
  "keyring",
+ "objc2 0.6.4",
  "opener",
  "reqwest",
  "rfd",
@@ -829,7 +830,7 @@ dependencies = [
 
 [[package]]
 name = "cashflow-core"
-version = "2.0.0"
+version = "2.0.1"
 dependencies = [
  "chrono",
  "rust_decimal",
@@ -841,7 +842,7 @@ dependencies = [
 
 [[package]]
 name = "cashflow-data"
-version = "2.0.0"
+version = "2.0.1"
 dependencies = [
  "cashflow-core",
  "chrono",
@@ -859,7 +860,7 @@ dependencies = [
 
 [[package]]
 name = "cashflow-documents"
-version = "2.0.0"
+version = "2.0.1"
 dependencies = [
  "cashflow-core",
  "chrono",
